@@ -5,13 +5,19 @@ import { createNewProjectForm, deleteNewProjectForm, createNewTaskForm, deleteNe
 const currentProjects = [];
 const finishedProjects = [];
 
+function getCurrentProjects() {
+  return currentProjects;
+}
+
+export { getCurrentProjects }
+
 class Project {
   constructor(name, priority) {
     this.name = name;
     this.priority = priority;
-
-    const tasks = [];
   }
+
+  tasks = [];
 }
 
 class Task {
@@ -67,19 +73,22 @@ document.querySelector('.new-task-button').addEventListener('click', () => {
 
 function createNewTaskButtonEvent() {
   document.querySelector('.create-new-task-button').addEventListener('click', () => {
-    let newTask;
-    if(document.querySelector('#low-priority').checked) {
-      newTask = new Task(document.querySelector('#task-name').value, document.querySelector('#task-description').value, 
-                         document.querySelector('#task-date').value, document.querySelector('#low-priority').value);
-    } else if(document.querySelector('#medium-priority').checked) {
-      newTask = new Task(document.querySelector('#task-name').value, document.querySelector('#task-description').value, 
-                         document.querySelector('#task-date').value, document.querySelector('#medium-priority').value);
-    } else if(document.querySelector('#high-priority').checked) {
-      newTask = new Task(document.querySelector('#task-name').value, document.querySelector('#task-description').value, 
-                         document.querySelector('#task-date').value, document.querySelector('#high-priority').value);
+    if(!document.querySelector('#chosen-project').value || !document.querySelector('#task-date').value) {
+      console.log('Select a valid project');
+    } else {
+      let newTask;
+      if(document.querySelector('#low-priority').checked) {
+        newTask = new Task(document.querySelector('#task-name').value, document.querySelector('#task-description').value, 
+                           document.querySelector('#task-date').value, document.querySelector('#low-priority').value);
+      } else if(document.querySelector('#medium-priority').checked) {
+        newTask = new Task(document.querySelector('#task-name').value, document.querySelector('#task-description').value, 
+                           document.querySelector('#task-date').value, document.querySelector('#medium-priority').value);
+      } else if(document.querySelector('#high-priority').checked) {
+        newTask = new Task(document.querySelector('#task-name').value, document.querySelector('#task-description').value, 
+                           document.querySelector('#task-date').value, document.querySelector('#high-priority').value);
+      }
+      currentProjects[document.querySelector('#chosen-project').value].tasks.push(newTask);
+      deleteNewTaskForm();
     }
-    // currentProjects.push(newProject);
-    console.log(newTask);
-    deleteNewTaskForm();
   });
 }

@@ -1,3 +1,5 @@
+import { getCurrentProjects } from "./index.js";
+
 export function createNewProjectForm() {
   const newProjectDiv = document.querySelector('.new-project-form');
 
@@ -84,6 +86,34 @@ export function deleteNewProjectForm() {
 
 export function createNewTaskForm() {
   const newTaskDiv = document.querySelector('.new-task-form');
+
+  const projectDiv = document.createElement('div');
+  projectDiv.classList.add('chosen-project-container');
+
+  const projectLabel = document.createElement('label');
+  projectLabel.setAttribute('for', 'chosen-project');
+  projectLabel.textContent = 'Project';
+
+  const projectSelect = document.createElement('select');
+  projectSelect.setAttribute('name', 'chosen-project');
+  projectSelect.setAttribute('id', 'chosen-project');
+
+  projectDiv.appendChild(projectLabel);
+  projectDiv.appendChild(projectSelect);
+
+  const projectOptionDefault = document.createElement('option');
+  projectOptionDefault.setAttribute('value', '');
+  projectOptionDefault.textContent = 'Select a project';
+
+  projectSelect.appendChild(projectOptionDefault);
+
+  for(let i = 0; i < getCurrentProjects().length; i++) {
+    const projectOption = document.createElement('option');
+    projectOption.setAttribute('value', i);
+    projectOption.textContent = getCurrentProjects()[i].name;
+
+    projectSelect.appendChild(projectOption);
+  }
 
   const nameDiv = document.createElement('div');
   nameDiv.classList.add('task-name-container');
@@ -184,6 +214,7 @@ export function createNewTaskForm() {
   createNewTaskButton.classList.add('create-new-task-button');
   createNewTaskButton.textContent = 'Create';
 
+  newTaskDiv.appendChild(projectDiv);
   newTaskDiv.appendChild(nameDiv);
   newTaskDiv.appendChild(descriptionDiv);
   newTaskDiv.appendChild(dateDiv);
