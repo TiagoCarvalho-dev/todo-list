@@ -314,3 +314,17 @@ export function addToCurrentProjects(name, priority) {
 
   document.querySelector('.current-projects').appendChild(projectName);
 }
+
+export function removeAllProjectCards() {
+  const mainDiv = document.querySelector('.main-section');
+
+  while(mainDiv.firstChild) {
+    mainDiv.removeChild(mainDiv.lastChild);
+  }
+}
+
+export function showAllProjectCards() {
+  for(let i = 0; i < getCurrentProjects().length; i++) {
+    createProjectCard(getCurrentProjects()[i].name, getCurrentProjects()[i].priority);
+  }
+}
