@@ -306,3 +306,11 @@ export function createTasksSubcards(name, date, time, priority) {
 
   document.querySelector('.tasks-subcards').appendChild(taskDiv);
 }
+
+export function addToCurrentProjects(name, priority) {
+  const projectName = document.createElement('button');
+  projectName.classList.add(priority);
+  projectName.textContent = name;
+
+  document.querySelector('.current-projects').appendChild(projectName);
+}

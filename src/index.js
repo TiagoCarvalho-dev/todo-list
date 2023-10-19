@@ -1,7 +1,7 @@
 import "./normalize.css";
 import "./style.css";
 import { createNewProjectForm, deleteNewProjectForm, createNewTaskForm, deleteNewTaskForm,
-         createProjectCard, createTasksSubcards } from "./DOMManipulation.js";
+         createProjectCard, createTasksSubcards, addToCurrentProjects } from "./DOMManipulation.js";
 
 const currentProjects = [];
 const finishedProjects = [];
@@ -59,6 +59,7 @@ function createNewProjectButtonEvent() {
     }
     currentProjects.push(newProject);
     createProjectCard(newProject.name, newProject.priority);
+    addToCurrentProjects(newProject.name, newProject.priority);
     deleteNewProjectForm();
   });
 }
