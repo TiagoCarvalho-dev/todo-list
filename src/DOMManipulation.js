@@ -130,21 +130,6 @@ export function createNewTaskForm() {
   nameDiv.appendChild(nameLabel);
   nameDiv.appendChild(nameInput);
 
-  const descriptionDiv = document.createElement('div');
-  descriptionDiv.classList.add('task-description-container');
-
-  const descriptionLabel = document.createElement('label');
-  descriptionLabel.setAttribute('for', 'task-description');
-  descriptionLabel.textContent = 'Description';
-
-  const descriptionInput = document.createElement('input');
-  descriptionInput.setAttribute('name', 'task-description');
-  descriptionInput.setAttribute('id', 'task-description');
-  descriptionInput.setAttribute('type', 'textarea');
-
-  descriptionDiv.appendChild(descriptionLabel);
-  descriptionDiv.appendChild(descriptionInput);
-
   const dateDiv = document.createElement('div');
   dateDiv.classList.add('task-date-container');
 
@@ -159,6 +144,21 @@ export function createNewTaskForm() {
 
   dateDiv.appendChild(dateLabel);
   dateDiv.appendChild(dateInput);
+
+  const timeDiv = document.createElement('div');
+  timeDiv.classList.add('task-time-container');
+
+  const timeLabel = document.createElement('label');
+  timeLabel.setAttribute('for', 'task-time');
+  timeLabel.textContent = 'Due time';
+
+  const timeInput = document.createElement('input');
+  timeInput.setAttribute('name', 'task-time');
+  timeInput.setAttribute('id', 'task-time');
+  timeInput.setAttribute('type', 'time');
+
+  timeDiv.appendChild(timeLabel);
+  timeDiv.appendChild(timeInput);
 
   const priorityDiv = document.createElement('div');
   priorityDiv.classList.add('task-priority-container');
@@ -216,8 +216,8 @@ export function createNewTaskForm() {
 
   newTaskDiv.appendChild(projectDiv);
   newTaskDiv.appendChild(nameDiv);
-  newTaskDiv.appendChild(descriptionDiv);
   newTaskDiv.appendChild(dateDiv);
+  newTaskDiv.appendChild(timeDiv);
   newTaskDiv.appendChild(priorityDiv);
   newTaskDiv.appendChild(createNewTaskButton);
 }
