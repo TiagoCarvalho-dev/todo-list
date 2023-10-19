@@ -54,6 +54,29 @@ footer {
   gap: 0.8rem;
 }
 
+.project-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.project-subcard {
+  display: flex;
+}
+
+.tasks-subcards {
+  display: flex;
+  flex-direction: column;
+}
+
+.tasks-subcards > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.tasks-subcards > div > div {
+  display: flex;
+}
+
 * {
   border: solid 1px red;
 }

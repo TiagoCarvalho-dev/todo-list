@@ -228,3 +228,81 @@ export function deleteNewTaskForm() {
     newTaskForm.removeChild(newTaskForm.lastChild);
   }
 }
+
+export function createProjectCard(name, priority) {
+  const projectCardDiv = document.createElement('div');
+  projectCardDiv.classList.add('project-card');
+
+  const projectSubcardDiv = document.createElement('div');
+  projectSubcardDiv.classList.add('project-subcard');
+
+  const projectName = document.createElement('h2');
+  projectName.textContent = name;
+
+  const projectPriority = document.createElement('p');
+  projectPriority.textContent = priority;
+
+  const completeProjectButton = document.createElement('button');
+  completeProjectButton.classList.add('complete-project-button');
+  completeProjectButton.textContent = 'DONE';
+
+  const deleteProjectButton = document.createElement('button');
+  deleteProjectButton.classList.add('delete-project-button');
+  deleteProjectButton.textContent = 'DELETE';
+
+  projectSubcardDiv.appendChild(projectName);
+  projectSubcardDiv.appendChild(projectPriority);
+  projectSubcardDiv.appendChild(completeProjectButton);
+  projectSubcardDiv.appendChild(deleteProjectButton);
+
+  const tasksSubcardsDiv = document.createElement('div');
+  tasksSubcardsDiv.classList.add('tasks-subcards');
+
+  projectCardDiv.appendChild(projectSubcardDiv);
+  projectCardDiv.appendChild(tasksSubcardsDiv);
+
+  document.querySelector('.main-section').appendChild(projectCardDiv);
+}
+
+export function createTasksSubcards(name, date, time, priority) {
+
+  const taskDiv = document.createElement('div');
+  taskDiv.classList.add('task');
+
+  const nameDiv = document.createElement('div');
+
+  const taskName = document.createElement('h3');
+  taskName.textContent = name;
+
+  const completeTaskButton = document.createElement('button');
+  completeTaskButton.classList.add('complete-task-button');
+  completeTaskButton.textContent = 'DONE';
+
+  const deleteTaskButton = document.createElement('button');
+  deleteTaskButton.classList.add('delete-task-button');
+  deleteTaskButton.textContent = 'DELETE';
+
+  nameDiv.appendChild(taskName);
+  nameDiv.appendChild(completeTaskButton);
+  nameDiv.appendChild(deleteTaskButton);
+
+  const detailsDiv = document.createElement('div');
+
+  const taskDate = document.createElement('p');
+  taskDate.textContent = date;
+
+  const taskTime = document.createElement('p');
+  taskTime.textContent = time;
+
+  const taskPriority = document.createElement('p');
+  taskPriority.textContent = priority;
+
+  detailsDiv.appendChild(taskDate);
+  detailsDiv.appendChild(taskTime);
+  detailsDiv.appendChild(taskPriority);
+
+  taskDiv.appendChild(nameDiv);
+  taskDiv.appendChild(detailsDiv);
+
+  document.querySelector('.tasks-subcards').appendChild(taskDiv);
+}

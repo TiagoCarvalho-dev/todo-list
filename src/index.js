@@ -1,6 +1,7 @@
 import "./normalize.css";
 import "./style.css";
-import { createNewProjectForm, deleteNewProjectForm, createNewTaskForm, deleteNewTaskForm } from "./DOMManipulation.js";
+import { createNewProjectForm, deleteNewProjectForm, createNewTaskForm, deleteNewTaskForm,
+         createProjectCard, createTasksSubcards } from "./DOMManipulation.js";
 
 const currentProjects = [];
 const finishedProjects = [];
@@ -18,6 +19,8 @@ class Project {
   }
 
   tasks = [];
+  finishedTasks = [];
+  complete = false;
 }
 
 class Task {
@@ -27,6 +30,8 @@ class Task {
     this.time = time;
     this.priority = priority;
   }
+
+  complete = false;
 }
 
 document.querySelector('.new-project-button').addEventListener('click', () => {
@@ -53,6 +58,7 @@ function createNewProjectButtonEvent() {
       newProject = new Project(document.querySelector('#project-name').value, document.querySelector('#high-priority').value);
     }
     currentProjects.push(newProject);
+    createProjectCard(newProject.name, newProject.priority);
     deleteNewProjectForm();
   });
 }
@@ -83,12 +89,13 @@ function createNewTaskButtonEvent() {
                            document.querySelector('#task-time').value, document.querySelector('#low-priority').value);
       } else if(document.querySelector('#medium-priority').checked) {
         newTask = new Task(document.querySelector('#task-name').value, document.querySelector('#task-date').value, 
-                           document.querySelector('##task-time').value, document.querySelector('#medium-priority').value);
+                           document.querySelector('#task-time').value, document.querySelector('#medium-priority').value);
       } else if(document.querySelector('#high-priority').checked) {
         newTask = new Task(document.querySelector('#task-name').value, document.querySelector('#task-date').value, 
                            document.querySelector('#task-time').value, document.querySelector('#high-priority').value);
       }
       currentProjects[document.querySelector('#chosen-project').value].tasks.push(newTask);
+      createTasksSubcards(newTask.name, newTask.date, newTask.time, newTask.priority);
       deleteNewTaskForm();
     }
   });
