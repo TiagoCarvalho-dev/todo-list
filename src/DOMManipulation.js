@@ -229,9 +229,9 @@ export function deleteNewTaskForm() {
   }
 }
 
-export function createProjectCard(name, priority) {
+export function createProjectCard(name, priority, index) {
   const projectCardDiv = document.createElement('div');
-  projectCardDiv.classList.add('project-card');
+  projectCardDiv.classList.add(`project-card-${index}`);
 
   const projectSubcardDiv = document.createElement('div');
   projectSubcardDiv.classList.add('project-subcard');
@@ -256,7 +256,7 @@ export function createProjectCard(name, priority) {
   projectSubcardDiv.appendChild(deleteProjectButton);
 
   const tasksSubcardsDiv = document.createElement('div');
-  tasksSubcardsDiv.classList.add('tasks-subcards');
+  tasksSubcardsDiv.classList.add(`tasks-subcards`);
 
   projectCardDiv.appendChild(projectSubcardDiv);
   projectCardDiv.appendChild(tasksSubcardsDiv);
@@ -264,10 +264,10 @@ export function createProjectCard(name, priority) {
   document.querySelector('.main-section').appendChild(projectCardDiv);
 }
 
-export function createTasksSubcards(name, date, time, priority) {
+export function createTasksSubcards(name, date, time, priority, project, index) {
 
   const taskDiv = document.createElement('div');
-  taskDiv.classList.add('task');
+  taskDiv.classList.add(`task-${index}`);
 
   const nameDiv = document.createElement('div');
 
@@ -304,7 +304,7 @@ export function createTasksSubcards(name, date, time, priority) {
   taskDiv.appendChild(nameDiv);
   taskDiv.appendChild(detailsDiv);
 
-  document.querySelector('.tasks-subcards').appendChild(taskDiv);
+  document.querySelector(`.project-card-${project} > .tasks-subcards`).appendChild(taskDiv);
 }
 
 export function addToCurrentProjects(name, priority) {
@@ -326,5 +326,9 @@ export function removeAllProjectCards() {
 export function showAllProjectCards() {
   for(let i = 0; i < getCurrentProjects().length; i++) {
     createProjectCard(getCurrentProjects()[i].name, getCurrentProjects()[i].priority);
+    for(let j = 0; j < getCurrentProjects()[i].tasks.length; j++) {
+      createTasksSubcards(getCurrentProjects()[i].tasks[j].name, getCurrentProjects()[i].tasks[j].date, 
+                          getCurrentProjects()[i].tasks[j].time, getCurrentProjects()[i].tasks[j].priority);
+    }
   }
 }
