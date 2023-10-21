@@ -269,46 +269,49 @@ export function createProjectCard(name, priority, index) {
 }
 
 export function createTasksSubcards(name, date, time, priority, project, index) {
+  if(!document.querySelector(`.project-card-${project}`)) {
+    return
+  } else {
+    const taskDiv = document.createElement('div');
+    taskDiv.classList.add(`task-${index}`);
 
-  const taskDiv = document.createElement('div');
-  taskDiv.classList.add(`task-${index}`);
+    const nameDiv = document.createElement('div');
 
-  const nameDiv = document.createElement('div');
+    const taskName = document.createElement('h3');
+    taskName.textContent = name;
 
-  const taskName = document.createElement('h3');
-  taskName.textContent = name;
+    const completeTaskButton = document.createElement('button');
+    completeTaskButton.classList.add('complete-task-button');
+    completeTaskButton.textContent = 'DONE';
 
-  const completeTaskButton = document.createElement('button');
-  completeTaskButton.classList.add('complete-task-button');
-  completeTaskButton.textContent = 'DONE';
+    const deleteTaskButton = document.createElement('button');
+    deleteTaskButton.classList.add('delete-task-button');
+    deleteTaskButton.textContent = 'DELETE';
 
-  const deleteTaskButton = document.createElement('button');
-  deleteTaskButton.classList.add('delete-task-button');
-  deleteTaskButton.textContent = 'DELETE';
+    nameDiv.appendChild(taskName);
+    nameDiv.appendChild(completeTaskButton);
+    nameDiv.appendChild(deleteTaskButton);
 
-  nameDiv.appendChild(taskName);
-  nameDiv.appendChild(completeTaskButton);
-  nameDiv.appendChild(deleteTaskButton);
+    const detailsDiv = document.createElement('div');
 
-  const detailsDiv = document.createElement('div');
+    const taskDate = document.createElement('p');
+    taskDate.textContent = date;
 
-  const taskDate = document.createElement('p');
-  taskDate.textContent = date;
+    const taskTime = document.createElement('p');
+    taskTime.textContent = time;
 
-  const taskTime = document.createElement('p');
-  taskTime.textContent = time;
+    const taskPriority = document.createElement('p');
+    taskPriority.textContent = priority;
 
-  const taskPriority = document.createElement('p');
-  taskPriority.textContent = priority;
+    detailsDiv.appendChild(taskDate);
+    detailsDiv.appendChild(taskTime);
+    detailsDiv.appendChild(taskPriority);
 
-  detailsDiv.appendChild(taskDate);
-  detailsDiv.appendChild(taskTime);
-  detailsDiv.appendChild(taskPriority);
+    taskDiv.appendChild(nameDiv);
+    taskDiv.appendChild(detailsDiv);
 
-  taskDiv.appendChild(nameDiv);
-  taskDiv.appendChild(detailsDiv);
-
-  document.querySelector(`.project-card-${project} > .tasks-subcards`).appendChild(taskDiv);
+    document.querySelector(`.project-card-${project} > .tasks-subcards`).appendChild(taskDiv);
+  }
 }
 
 function noProjectsAvailableText() {
