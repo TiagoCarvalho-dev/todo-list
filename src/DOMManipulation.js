@@ -230,7 +230,7 @@ export function deleteNewTaskForm() {
 }
 
 export function createProjectCard(name, priority, index) {
-  if(document.querySelector('.main-section').firstChild === document.querySelector('.no-projects')) {
+  if(document.querySelector('.main-section').firstChild === document.querySelector('.no-projects-main-page')) {
     removeAllProjectCards();
   }
 
@@ -247,11 +247,12 @@ export function createProjectCard(name, priority, index) {
   projectPriority.textContent = priority;
 
   const completeProjectButton = document.createElement('button');
-  completeProjectButton.classList.add('complete-project-button');
+  completeProjectButton.classList.add(`complete-project-button-${index}`);
+  completeProjectButton.dataset.index = index;
   completeProjectButton.textContent = 'DONE';
 
   const deleteProjectButton = document.createElement('button');
-  deleteProjectButton.classList.add('delete-project-button');
+  deleteProjectButton.classList.add(`delete-project-button-${index}`);
   deleteProjectButton.textContent = 'DELETE';
 
   projectSubcardDiv.appendChild(projectName);
@@ -281,11 +282,11 @@ export function createTasksSubcards(name, date, time, priority, project, index) 
     taskName.textContent = name;
 
     const completeTaskButton = document.createElement('button');
-    completeTaskButton.classList.add('complete-task-button');
+    completeTaskButton.classList.add(`complete-task-button-${project}-${index}`);
     completeTaskButton.textContent = 'DONE';
 
     const deleteTaskButton = document.createElement('button');
-    deleteTaskButton.classList.add('delete-task-button');
+    deleteTaskButton.classList.add(`delete-task-button-${project}-${index}`);
     deleteTaskButton.textContent = 'DELETE';
 
     nameDiv.appendChild(taskName);
@@ -316,32 +317,42 @@ export function createTasksSubcards(name, date, time, priority, project, index) 
 
 function noProjectsAvailableText() {
   const noProjectsAvailable = document.createElement('h1');
-  noProjectsAvailable.classList.add('no-projects');
+  noProjectsAvailable.classList.add('no-projects-main-page');
   noProjectsAvailable.textContent = 'NO PROJECTS AVAILABLE';
 
   document.querySelector('.main-section').appendChild(noProjectsAvailable);
 }
 
-export function addToCurrentProjects(name, priority, index) {
-  const projectName = document.createElement('button');
-  projectName.setAttribute('value', name);
-  projectName.dataset.name = name;
-  projectName.dataset.priority = priority;
-  projectName.dataset.index = index;
-  projectName.textContent = name;
+export function buildCurrentProjects() {
+  removeAllCurrentProjects();
 
-  document.querySelector('.current-projects').appendChild(projectName);
+  for(let i = 0; i < getCurrentProjects().length; i++) {
+    const projectName = document.createElement('button');
+    projectName.setAttribute('value', getCurrentProjects()[i].name);
+    projectName.dataset.name = getCurrentProjects()[i].name;
+    projectName.dataset.priority = getCurrentProjects()[i].priority;
+    projectName.dataset.index = i;
+    projectName.textContent = getCurrentProjects()[i].name;
+
+    document.querySelector('.current-projects').appendChild(projectName);
+  }
 }
 
-export function removeAllProjectCards() {
-  const mainDiv = document.querySelector('.main-section');
+function removeAllCurrentProjects() {
+  const currentProjectsDiv = document.querySelector('.current-projects');
+  currentProjectsDiv.replaceChildren(currentProjectsDiv.firstElementChild);
+}
 
+function removeAllProjectCards() {
+  const mainDiv = document.querySelector('.main-section');
   while(mainDiv.firstChild) {
     mainDiv.removeChild(mainDiv.lastChild);
   }
 }
 
 export function showAllProjectCards() {
+  removeAllProjectCards();
+
   if(!document.querySelector('.main-section').firstChild) {
     noProjectsAvailableText();
   }

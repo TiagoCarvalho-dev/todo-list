@@ -1,8 +1,8 @@
 import "./normalize.css";
 import "./style.css";
 import { createNewProjectForm, deleteNewProjectForm, createNewTaskForm, deleteNewTaskForm,
-         createProjectCard, createTasksSubcards, addToCurrentProjects, showAllProjectCards,
-         removeAllProjectCards, createCurrentProjectCard } from "./DOMManipulation.js";
+         createProjectCard, createTasksSubcards, showAllProjectCards,
+         createCurrentProjectCard, buildCurrentProjects } from "./DOMManipulation.js";
 
 const currentProjects = [];
 const finishedProjects = [];
@@ -20,6 +20,10 @@ class Project {
   tasks = [];
   finishedTasks = [];
   complete = false;
+
+  changeCompleteStatus() {
+    this.complete ? this.complete = false : this.complete = true;
+  }
 }
 
 class Task {
@@ -31,10 +35,13 @@ class Task {
   }
 
   complete = false;
+
+  changeCompleteStatus() {
+    this.complete ? this.complete = false : this.complete = true;
+  }
 }
 
 document.querySelector('.home-button').addEventListener('click',() => {
-  removeAllProjectCards();
   showAllProjectCards();
 });
 
@@ -65,7 +72,8 @@ function createNewProjectButtonEvent() {
     }
     currentProjects.push(newProject);
     createProjectCard(newProject.name, newProject.priority, currentProjects.length - 1);
-    addToCurrentProjects(newProject.name, newProject.priority, currentProjects.length - 1);
+    addCompleteProjectButtonEvent();
+    buildCurrentProjects();
     addCurrentProjectsButtonEvent();
     deleteNewProjectForm();
   });
@@ -112,6 +120,20 @@ function createNewTaskButtonEvent() {
 function addCurrentProjectsButtonEvent() {
   const allProjects = document.querySelectorAll('.current-projects > button');
   allProjects.forEach(button => button.addEventListener('click', createCurrentProjectCard));
+}
+
+function addCompleteProjectButtonEvent() {
+    document.querySelector(`.complete-project-button-${this.dataset.index}`).addEventListener('click', completeButtonAction);
+}
+
+function completeButtonAction() {
+  console.log(this.dataset.index);
+  finishedProjects.push(currentProjects[this.dataset.index]);
+  console.log(finishedProjects);
+  currentProjects.splice(this.dataset.index, 1);
+  console.log(currentProjects);
+  buildCurrentProjects();
+  showAllProjectCards();
 }
 
 showAllProjectCards();
