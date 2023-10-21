@@ -53,6 +53,8 @@ document.querySelector('.new-project-button').addEventListener('click', () => {
 
 function createNewProjectButtonEvent() {
   document.querySelector('.create-new-project-button').addEventListener('click', () => {
+    if(!document.querySelector('#project-name').value) return console.log('Please insert a project name.');
+
     let newProject;
     if(document.querySelector('#low-priority').checked) {
       newProject = new Project(document.querySelector('#project-name').value, document.querySelector('#low-priority').value);
@@ -84,27 +86,26 @@ document.querySelector('.new-task-button').addEventListener('click', () => {
 
 function createNewTaskButtonEvent() {
   document.querySelector('.create-new-task-button').addEventListener('click', () => {
-    if(!document.querySelector('#chosen-project').value || 
-       !document.querySelector('#task-date').value || 
-       !document.querySelector('#task-time').value) {
-      console.log('Select a valid project');
-    } else {
-      let newTask;
-      if(document.querySelector('#low-priority').checked) {
-        newTask = new Task(document.querySelector('#task-name').value, document.querySelector('#task-date').value, 
-                           document.querySelector('#task-time').value, document.querySelector('#low-priority').value);
-      } else if(document.querySelector('#medium-priority').checked) {
-        newTask = new Task(document.querySelector('#task-name').value, document.querySelector('#task-date').value, 
-                           document.querySelector('#task-time').value, document.querySelector('#medium-priority').value);
-      } else if(document.querySelector('#high-priority').checked) {
-        newTask = new Task(document.querySelector('#task-name').value, document.querySelector('#task-date').value, 
-                           document.querySelector('#task-time').value, document.querySelector('#high-priority').value);
-      }
-      currentProjects[document.querySelector('#chosen-project').value].tasks.push(newTask);
-      createTasksSubcards(newTask.name, newTask.date, newTask.time, newTask.priority, document.querySelector('#chosen-project').value, 
-                          currentProjects[document.querySelector('#chosen-project').value].tasks.length - 1);
-      deleteNewTaskForm();
+    if(!document.querySelector('#chosen-project').value) return console.log('Select valid project');
+    if(!document.querySelector('#task-name').value) return console.log('Select valid name');
+    if(!document.querySelector('#task-date').value) return console.log('Select valid date');
+    if(!document.querySelector('#task-time').value) return console.log('Select valid time');
+
+    let newTask;
+    if(document.querySelector('#low-priority').checked) {
+      newTask = new Task(document.querySelector('#task-name').value, document.querySelector('#task-date').value, 
+                         document.querySelector('#task-time').value, document.querySelector('#low-priority').value);
+    } else if(document.querySelector('#medium-priority').checked) {
+      newTask = new Task(document.querySelector('#task-name').value, document.querySelector('#task-date').value, 
+                         document.querySelector('#task-time').value, document.querySelector('#medium-priority').value);
+    } else if(document.querySelector('#high-priority').checked) {
+      newTask = new Task(document.querySelector('#task-name').value, document.querySelector('#task-date').value, 
+                         document.querySelector('#task-time').value, document.querySelector('#high-priority').value);
     }
+    currentProjects[document.querySelector('#chosen-project').value].tasks.push(newTask);
+    createTasksSubcards(newTask.name, newTask.date, newTask.time, newTask.priority, document.querySelector('#chosen-project').value, 
+                        currentProjects[document.querySelector('#chosen-project').value].tasks.length - 1);
+    deleteNewTaskForm();
   });
 }
 
