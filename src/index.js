@@ -2,16 +2,14 @@ import "./normalize.css";
 import "./style.css";
 import { createNewProjectForm, deleteNewProjectForm, createNewTaskForm, deleteNewTaskForm,
          createProjectCard, createTasksSubcards, addToCurrentProjects, showAllProjectCards,
-         removeAllProjectCards } from "./DOMManipulation.js";
+         removeAllProjectCards, createCurrentProjectCard } from "./DOMManipulation.js";
 
 const currentProjects = [];
 const finishedProjects = [];
 
-function getCurrentProjects() {
+export function getCurrentProjects() {
   return currentProjects;
 }
-
-export { getCurrentProjects }
 
 class Project {
   constructor(name, priority) {
@@ -35,32 +33,10 @@ class Task {
   complete = false;
 }
 
-//TESTS!!
-
-// const project1 = new Project('NAME1', 'PRIORITY1');
-// const task1 = new Task('TASK1', 'DATE1', 'TIME1', 'PRIORITY1');
-// const task2 = new Task('TASK2', 'DATE2', 'TIME2', 'PRIORITY2');
-// project1.tasks.push(task1);
-// project1.tasks.push(task2);
-
-// const project2 = new Project('NAME2', 'PRIORITY2');
-// const task3 = new Task('TASK3', 'DATE3', 'TIME3', 'PRIORITY3');
-// const task4 = new Task('TASK4', 'DATE4', 'TIME4', 'PRIORITY4');
-// project2.tasks.push(task3);
-// project2.tasks.push(task4);
-
-
-// const project3 = new Project('NAME3', 'PRIORITY3');
-// const task5 = new Task('TASK5', 'DATE5', 'TIME5', 'PRIORITY5');
-// const task6 = new Task('TASK6', 'DATE6', 'TIME6', 'PRIORITY6');
-// project3.tasks.push(task5);
-// project3.tasks.push(task6);
-
-// currentProjects.push(project1);
-// currentProjects.push(project2);
-// currentProjects.push(project3);
-
-//TESTS!!
+document.querySelector('.home-button').addEventListener('click',() => {
+  removeAllProjectCards();
+  showAllProjectCards();
+});
 
 document.querySelector('.new-project-button').addEventListener('click', () => {
   if(document.querySelector('.new-task-form').firstChild) {
@@ -87,7 +63,8 @@ function createNewProjectButtonEvent() {
     }
     currentProjects.push(newProject);
     createProjectCard(newProject.name, newProject.priority, currentProjects.length - 1);
-    addToCurrentProjects(newProject.name, newProject.priority);
+    addToCurrentProjects(newProject.name, newProject.priority, currentProjects.length - 1);
+    addCurrentProjectsButtonEvent();
     deleteNewProjectForm();
   });
 }
@@ -124,10 +101,16 @@ function createNewTaskButtonEvent() {
                            document.querySelector('#task-time').value, document.querySelector('#high-priority').value);
       }
       currentProjects[document.querySelector('#chosen-project').value].tasks.push(newTask);
-      createTasksSubcards(newTask.name, newTask.date, newTask.time, newTask.priority, document.querySelector('#chosen-project').value, currentProjects[document.querySelector('#chosen-project').value].tasks.length - 1);
+      createTasksSubcards(newTask.name, newTask.date, newTask.time, newTask.priority, document.querySelector('#chosen-project').value, 
+                          currentProjects[document.querySelector('#chosen-project').value].tasks.length - 1);
       deleteNewTaskForm();
     }
   });
+}
+
+function addCurrentProjectsButtonEvent() {
+  const allProjects = document.querySelectorAll('.current-projects > button');
+  allProjects.forEach(button => button.addEventListener('click', createCurrentProjectCard));
 }
 
 showAllProjectCards();

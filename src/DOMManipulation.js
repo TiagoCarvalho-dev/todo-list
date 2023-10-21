@@ -230,6 +230,10 @@ export function deleteNewTaskForm() {
 }
 
 export function createProjectCard(name, priority, index) {
+  if(document.querySelector('.main-section').firstChild === document.querySelector('.no-projects')) {
+    removeAllProjectCards();
+  }
+
   const projectCardDiv = document.createElement('div');
   projectCardDiv.classList.add(`project-card-${index}`);
 
@@ -307,9 +311,20 @@ export function createTasksSubcards(name, date, time, priority, project, index) 
   document.querySelector(`.project-card-${project} > .tasks-subcards`).appendChild(taskDiv);
 }
 
-export function addToCurrentProjects(name, priority) {
+function noProjectsAvailableText() {
+  const noProjectsAvailable = document.createElement('h1');
+  noProjectsAvailable.classList.add('no-projects');
+  noProjectsAvailable.textContent = 'NO PROJECTS AVAILABLE';
+
+  document.querySelector('.main-section').appendChild(noProjectsAvailable);
+}
+
+export function addToCurrentProjects(name, priority, index) {
   const projectName = document.createElement('button');
-  projectName.classList.add(priority);
+  projectName.setAttribute('value', name);
+  projectName.dataset.name = name;
+  projectName.dataset.priority = priority;
+  projectName.dataset.index = index;
   projectName.textContent = name;
 
   document.querySelector('.current-projects').appendChild(projectName);
@@ -324,11 +339,26 @@ export function removeAllProjectCards() {
 }
 
 export function showAllProjectCards() {
+  if(!document.querySelector('.main-section').firstChild) {
+    noProjectsAvailableText();
+  }
+
   for(let i = 0; i < getCurrentProjects().length; i++) {
-    createProjectCard(getCurrentProjects()[i].name, getCurrentProjects()[i].priority);
+    createProjectCard(getCurrentProjects()[i].name, getCurrentProjects()[i].priority, i);
     for(let j = 0; j < getCurrentProjects()[i].tasks.length; j++) {
       createTasksSubcards(getCurrentProjects()[i].tasks[j].name, getCurrentProjects()[i].tasks[j].date, 
-                          getCurrentProjects()[i].tasks[j].time, getCurrentProjects()[i].tasks[j].priority);
+                          getCurrentProjects()[i].tasks[j].time, getCurrentProjects()[i].tasks[j].priority, i, j);
     }
+  }
+}
+
+export function createCurrentProjectCard() {
+  removeAllProjectCards();
+
+  const selectedProject = getCurrentProjects().filter(project => project.name === this.value);
+  createProjectCard(selectedProject[0].name, selectedProject[0].priority, getCurrentProjects().indexOf(selectedProject[0]));
+  for(let i = 0; i < selectedProject[0].tasks.length; i++) {
+    createTasksSubcards(selectedProject[0].tasks[i].name, selectedProject[0].tasks[i].date, selectedProject[0].tasks[i].time, 
+                        selectedProject[0].tasks[i].priority, getCurrentProjects().indexOf(selectedProject[0]), i);
   }
 }

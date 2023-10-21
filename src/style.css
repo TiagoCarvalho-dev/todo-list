@@ -45,6 +45,11 @@ nav {
   gap: 1rem;
 }
 
+.current-projects {
+  display: flex;
+  flex-direction: column;
+}
+
 footer {
   grid-row: 3 / 4;
   grid-column: 1 / 4;
