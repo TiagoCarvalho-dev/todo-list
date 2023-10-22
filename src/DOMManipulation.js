@@ -238,6 +238,10 @@ export function createProjectCard(name, priority, index) {
   const projectCardDiv = document.createElement('div');
   projectCardDiv.classList.add(`project-card-${index}`);
 
+  if(getCurrentProjects()[index].complete) {
+    projectCardDiv.classList.add('project-complete');
+  }
+
   const projectSubcardDiv = document.createElement('div');
   projectSubcardDiv.classList.add('project-subcard');
 
@@ -276,6 +280,10 @@ export function createTasksSubcards(name, date, time, priority, project, index) 
   } else {
     const taskDiv = document.createElement('div');
     taskDiv.classList.add(`task-${index}`);
+
+    if(getCurrentProjects()[project].tasks[index].complete) {
+      taskDiv.classList.add('task-complete');
+    }
 
     const nameDiv = document.createElement('div');
 
