@@ -3,7 +3,7 @@ import "./style.css";
 import { createNewProjectForm, deleteNewProjectForm, createNewTaskForm, deleteNewTaskForm,
          createProjectCard, createTasksSubcards, showAllProjectCards,
          createCurrentProjectCard, buildCurrentProjects, addTaskCompleteClass, 
-         addProjectCompleteClass } from "./DOMManipulation.js";
+         addProjectCompleteClass, removeTaskCard} from "./DOMManipulation.js";
 
 const currentProjects = [];
 const finishedProjects = [];
@@ -20,10 +20,6 @@ class Project {
 
   tasks = [];
   complete = false;
-
-  changeCompleteStatus() {
-    this.complete ? this.complete = false : this.complete = true;
-  }
 }
 
 class Task {
@@ -35,10 +31,6 @@ class Task {
   }
 
   complete = false;
-
-  changeCompleteStatus() {
-    this.complete ? this.complete = false : this.complete = true;
-  }
 }
 
 document.querySelector('.home-button').addEventListener('click',() => {
@@ -73,6 +65,7 @@ function createNewProjectButtonEvent() {
     currentProjects.push(newProject);
     createProjectCard(newProject.name, newProject.priority, currentProjects.length - 1);
     addCompleteProjectButtonEvent(currentProjects.length - 1);
+    addDeleteProjectButtonEvent(currentProjects.length - 1);
     buildCurrentProjects();
     addCurrentProjectsButtonEvent();
     deleteNewProjectForm();
@@ -134,6 +127,18 @@ export function addCompleteTaskButtonEvent() {
   document.querySelector(`.complete-task-button-${this.dataset.project}-${this.dataset.index}`).addEventListener('click', taskCompleteButtonAction);
 }
 
+export function addDeleteProjectButtonEvent(index) {
+  document.querySelector(`.delete-project-button-${index}`).addEventListener('click', projectDeleteButtonAction, true);
+}
+
+export function removeDeleteProjectButtonEvent(index) {
+  document.querySelector(`.delete-project-button-${index}`).removeEventListener('click', projectDeleteButtonAction, true);
+}
+
+export function addDeleteTaskButtonEvent() {
+  document.querySelector(`.delete-task-button-${this.dataset.project}-${this.dataset.index}`).addEventListener('click', taskDeleteButtonAction);
+}
+
 function projectCompleteButtonAction() {
   currentProjects[this.dataset.index].complete = true;
   addProjectCompleteClass(this.dataset.index);
@@ -143,9 +148,20 @@ function projectCompleteButtonAction() {
   showAllProjectCards();
 }
 
+function projectDeleteButtonAction() {
+  currentProjects.splice(this.dataset.index, 1);
+  buildCurrentProjects();
+  showAllProjectCards();
+}
+
 function taskCompleteButtonAction() {
   currentProjects[this.dataset.project].tasks[this.dataset.index].complete = true;
   addTaskCompleteClass(this.dataset.project, this.dataset.index);
+}
+
+function taskDeleteButtonAction() {
+  currentProjects[this.dataset.project].tasks.splice(this.dataset.index, 1);
+  removeTaskCard(this.dataset.project);
 }
 
 showAllProjectCards();

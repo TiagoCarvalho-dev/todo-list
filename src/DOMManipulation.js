@@ -1,5 +1,6 @@
 import { getCurrentProjects, addCompleteProjectButtonEvent, removeCompleteProjectButtonEvent, 
-         addCurrentProjectsButtonEvent, addCompleteTaskButtonEvent } from "./index.js";
+         addCurrentProjectsButtonEvent, addCompleteTaskButtonEvent, removeDeleteProjectButtonEvent, 
+         addDeleteProjectButtonEvent, addDeleteTaskButtonEvent } from "./index.js";
 
 export function createNewProjectForm() {
   const newProjectDiv = document.querySelector('.new-project-form');
@@ -304,6 +305,8 @@ export function createTasksSubcards(name, date, time, priority, project, index) 
     deleteTaskButton.dataset.index = index;
     deleteTaskButton.textContent = 'DELETE';
 
+    deleteTaskButton.addEventListener('click', addDeleteTaskButtonEvent);
+
     nameDiv.appendChild(taskName);
     nameDiv.appendChild(completeTaskButton);
     nameDiv.appendChild(deleteTaskButton);
@@ -327,6 +330,14 @@ export function createTasksSubcards(name, date, time, priority, project, index) 
     taskDiv.appendChild(detailsDiv);
 
     document.querySelector(`.project-card-${project} > .tasks-subcards`).appendChild(taskDiv);
+  }
+}
+
+export function removeTaskCard(project) {
+  removeAllTasksCards(project);
+  for(let i = 0; i < getCurrentProjects()[project].tasks.length; i++) {
+    createTasksSubcards(getCurrentProjects()[project].tasks[i].name, getCurrentProjects()[project].tasks[i].date, 
+                        getCurrentProjects()[project].tasks[i].time, getCurrentProjects()[project].tasks[i].priority, project, i);
   }
 }
 
@@ -366,6 +377,13 @@ function removeAllProjectCards() {
   }
 }
 
+function removeAllTasksCards(project) {
+  const taskSubcard = document.querySelector(`.project-card-${project} > .tasks-subcards`);
+  while(taskSubcard.firstChild) {
+    taskSubcard.removeChild(taskSubcard.lastChild);
+  }
+}
+
 export function showAllProjectCards() {
   removeAllProjectCards();
 
@@ -377,6 +395,8 @@ export function showAllProjectCards() {
     createProjectCard(getCurrentProjects()[i].name, getCurrentProjects()[i].priority, i);
     removeCompleteProjectButtonEvent(i);
     addCompleteProjectButtonEvent(i);
+    removeDeleteProjectButtonEvent(i);
+    addDeleteProjectButtonEvent(i);
     for(let j = 0; j < getCurrentProjects()[i].tasks.length; j++) {
       createTasksSubcards(getCurrentProjects()[i].tasks[j].name, getCurrentProjects()[i].tasks[j].date, 
                           getCurrentProjects()[i].tasks[j].time, getCurrentProjects()[i].tasks[j].priority, i, j);
@@ -390,6 +410,7 @@ export function createCurrentProjectCard() {
   const selectedProject = getCurrentProjects().filter(project => project.name === this.dataset.name);
   createProjectCard(selectedProject[0].name, selectedProject[0].priority, getCurrentProjects().indexOf(selectedProject[0]));
   addCompleteProjectButtonEvent(getCurrentProjects().indexOf(selectedProject[0]));
+  addDeleteProjectButtonEvent(getCurrentProjects().indexOf(selectedProject[0]));
   for(let i = 0; i < selectedProject[0].tasks.length; i++) {
     createTasksSubcards(selectedProject[0].tasks[i].name, selectedProject[0].tasks[i].date, selectedProject[0].tasks[i].time, 
                         selectedProject[0].tasks[i].priority, getCurrentProjects().indexOf(selectedProject[0]), i);
