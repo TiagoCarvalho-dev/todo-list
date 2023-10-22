@@ -2,7 +2,8 @@ import "./normalize.css";
 import "./style.css";
 import { createNewProjectForm, deleteNewProjectForm, createNewTaskForm, deleteNewTaskForm,
          createProjectCard, createTasksSubcards, showAllProjectCards,
-         createCurrentProjectCard, buildCurrentProjects } from "./DOMManipulation.js";
+         createCurrentProjectCard, buildCurrentProjects, addTaskCompleteClass, 
+         addProjectCompleteClass } from "./DOMManipulation.js";
 
 const currentProjects = [];
 const finishedProjects = [];
@@ -18,7 +19,6 @@ class Project {
   }
 
   tasks = [];
-  finishedTasks = [];
   complete = false;
 
   changeCompleteStatus() {
@@ -119,22 +119,33 @@ function createNewTaskButtonEvent() {
 
 export function addCurrentProjectsButtonEvent() {
   const allProjects = document.querySelectorAll('.current-projects > button');
-  allProjects.forEach(button => button.addEventListener('click', createCurrentProjectCard, true));
+  allProjects.forEach(button => button.addEventListener('click', createCurrentProjectCard));
 }
 
 export function addCompleteProjectButtonEvent(index) {
-  document.querySelector(`.complete-project-button-${index}`).addEventListener('click', completeButtonAction, true);
+  document.querySelector(`.complete-project-button-${index}`).addEventListener('click', projectCompleteButtonAction, true);
 }
 
 export function removeCompleteProjectButtonEvent(index) {
-  document.querySelector(`.complete-project-button-${index}`).removeEventListener('click', completeButtonAction, true);
+  document.querySelector(`.complete-project-button-${index}`).removeEventListener('click', projectCompleteButtonAction, true);
 }
 
-function completeButtonAction() {
+export function addCompleteTaskButtonEvent() {
+  document.querySelector(`.complete-task-button-${this.dataset.project}-${this.dataset.index}`).addEventListener('click', taskCompleteButtonAction);
+}
+
+function projectCompleteButtonAction() {
+  currentProjects[this.dataset.index].complete = true;
+  addProjectCompleteClass(this.dataset.index);
   finishedProjects.push(currentProjects[this.dataset.index]);
   currentProjects.splice(this.dataset.index, 1);
   buildCurrentProjects();
   showAllProjectCards();
+}
+
+function taskCompleteButtonAction() {
+  currentProjects[this.dataset.project].tasks[this.dataset.index].complete = true;
+  addTaskCompleteClass(this.dataset.project, this.dataset.index);
 }
 
 showAllProjectCards();

@@ -1,5 +1,5 @@
 import { getCurrentProjects, addCompleteProjectButtonEvent, removeCompleteProjectButtonEvent, 
-         addCurrentProjectsButtonEvent } from "./index.js";
+         addCurrentProjectsButtonEvent, addCompleteTaskButtonEvent } from "./index.js";
 
 export function createNewProjectForm() {
   const newProjectDiv = document.querySelector('.new-project-form');
@@ -284,10 +284,16 @@ export function createTasksSubcards(name, date, time, priority, project, index) 
 
     const completeTaskButton = document.createElement('button');
     completeTaskButton.classList.add(`complete-task-button-${project}-${index}`);
+    completeTaskButton.dataset.project = project;
+    completeTaskButton.dataset.index = index;
     completeTaskButton.textContent = 'DONE';
+
+    completeTaskButton.addEventListener('click', addCompleteTaskButtonEvent);
 
     const deleteTaskButton = document.createElement('button');
     deleteTaskButton.classList.add(`delete-task-button-${project}-${index}`);
+    deleteTaskButton.dataset.project = project;
+    deleteTaskButton.dataset.index = index;
     deleteTaskButton.textContent = 'DELETE';
 
     nameDiv.appendChild(taskName);
@@ -380,4 +386,12 @@ export function createCurrentProjectCard() {
     createTasksSubcards(selectedProject[0].tasks[i].name, selectedProject[0].tasks[i].date, selectedProject[0].tasks[i].time, 
                         selectedProject[0].tasks[i].priority, getCurrentProjects().indexOf(selectedProject[0]), i);
   }
+}
+
+export function addTaskCompleteClass(project, index) {
+  document.querySelector(`.project-card-${project} > .tasks-subcards > .task-${index}`).classList.add('task-complete');
+}
+
+export function addProjectCompleteClass(index) {
+  document.querySelector(`.project-card-${index}`).classList.add('project-complete');
 }

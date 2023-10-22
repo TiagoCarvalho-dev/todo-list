@@ -82,6 +82,14 @@ footer {
   display: flex;
 }
 
+.task-complete {
+  background-color: blue;
+}
+
+.project-complete {
+  background-color: green;
+}
+
 * {
   border: solid 1px red;
 }
