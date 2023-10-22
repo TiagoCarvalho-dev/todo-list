@@ -1,4 +1,5 @@
-import { getCurrentProjects } from "./index.js";
+import { getCurrentProjects, addCompleteProjectButtonEvent, removeCompleteProjectButtonEvent, 
+         addCurrentProjectsButtonEvent } from "./index.js";
 
 export function createNewProjectForm() {
   const newProjectDiv = document.querySelector('.new-project-form');
@@ -336,6 +337,7 @@ export function buildCurrentProjects() {
 
     document.querySelector('.current-projects').appendChild(projectName);
   }
+  addCurrentProjectsButtonEvent();
 }
 
 function removeAllCurrentProjects() {
@@ -359,6 +361,8 @@ export function showAllProjectCards() {
 
   for(let i = 0; i < getCurrentProjects().length; i++) {
     createProjectCard(getCurrentProjects()[i].name, getCurrentProjects()[i].priority, i);
+    removeCompleteProjectButtonEvent(i);
+    addCompleteProjectButtonEvent(i);
     for(let j = 0; j < getCurrentProjects()[i].tasks.length; j++) {
       createTasksSubcards(getCurrentProjects()[i].tasks[j].name, getCurrentProjects()[i].tasks[j].date, 
                           getCurrentProjects()[i].tasks[j].time, getCurrentProjects()[i].tasks[j].priority, i, j);
@@ -369,8 +373,9 @@ export function showAllProjectCards() {
 export function createCurrentProjectCard() {
   removeAllProjectCards();
 
-  const selectedProject = getCurrentProjects().filter(project => project.name === this.value);
+  const selectedProject = getCurrentProjects().filter(project => project.name === this.dataset.name);
   createProjectCard(selectedProject[0].name, selectedProject[0].priority, getCurrentProjects().indexOf(selectedProject[0]));
+  addCompleteProjectButtonEvent(getCurrentProjects().indexOf(selectedProject[0]));
   for(let i = 0; i < selectedProject[0].tasks.length; i++) {
     createTasksSubcards(selectedProject[0].tasks[i].name, selectedProject[0].tasks[i].date, selectedProject[0].tasks[i].time, 
                         selectedProject[0].tasks[i].priority, getCurrentProjects().indexOf(selectedProject[0]), i);

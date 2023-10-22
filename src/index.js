@@ -72,7 +72,7 @@ function createNewProjectButtonEvent() {
     }
     currentProjects.push(newProject);
     createProjectCard(newProject.name, newProject.priority, currentProjects.length - 1);
-    addCompleteProjectButtonEvent();
+    addCompleteProjectButtonEvent(currentProjects.length - 1);
     buildCurrentProjects();
     addCurrentProjectsButtonEvent();
     deleteNewProjectForm();
@@ -117,21 +117,22 @@ function createNewTaskButtonEvent() {
   });
 }
 
-function addCurrentProjectsButtonEvent() {
+export function addCurrentProjectsButtonEvent() {
   const allProjects = document.querySelectorAll('.current-projects > button');
-  allProjects.forEach(button => button.addEventListener('click', createCurrentProjectCard));
+  allProjects.forEach(button => button.addEventListener('click', createCurrentProjectCard, true));
 }
 
-function addCompleteProjectButtonEvent() {
-    document.querySelector(`.complete-project-button-${this.dataset.index}`).addEventListener('click', completeButtonAction);
+export function addCompleteProjectButtonEvent(index) {
+  document.querySelector(`.complete-project-button-${index}`).addEventListener('click', completeButtonAction, true);
+}
+
+export function removeCompleteProjectButtonEvent(index) {
+  document.querySelector(`.complete-project-button-${index}`).removeEventListener('click', completeButtonAction, true);
 }
 
 function completeButtonAction() {
-  console.log(this.dataset.index);
   finishedProjects.push(currentProjects[this.dataset.index]);
-  console.log(finishedProjects);
   currentProjects.splice(this.dataset.index, 1);
-  console.log(currentProjects);
   buildCurrentProjects();
   showAllProjectCards();
 }
