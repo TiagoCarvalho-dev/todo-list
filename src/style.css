@@ -45,7 +45,8 @@ nav {
   gap: 1rem;
 }
 
-.current-projects {
+.current-projects,
+.complete-projects {
   display: flex;
   flex-direction: column;
 }
