@@ -473,3 +473,8 @@ export function addTaskCompleteClass(project, index) {
 export function addProjectCompleteClass(index) {
   document.querySelector(`.project-card-${index}`).classList.add('project-complete');
 }
+
+export function projectsCounter() {
+  document.querySelector('.all-current-button').textContent = `Current (${getCurrentProjects().length})`;
+  document.querySelector('.all-complete-button').textContent = `Complete (${getFinishedProjects().length})`;
+}

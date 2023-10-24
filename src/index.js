@@ -3,7 +3,7 @@ import "./style.css";
 import { createNewProjectForm, deleteNewProjectForm, createNewTaskForm, deleteNewTaskForm,
          createProjectCard, createTasksSubCards, showAllProjectCards,
          createCurrentProjectCard, buildCurrentAndCompleteProjects, addTaskCompleteClass, 
-         addProjectCompleteClass, removeTaskCard, createCompleteProjectCard } from "./DOMManipulation.js";
+         addProjectCompleteClass, removeTaskCard, createCompleteProjectCard, projectsCounter } from "./DOMManipulation.js";
 
 const currentProjects = [];
 const finishedProjects = [];
@@ -32,7 +32,7 @@ class Task {
   complete = false;
 }
 
-document.querySelector('.home-button').addEventListener('click',() => {
+document.querySelector('.all-current-button').addEventListener('click',() => {
   showAllProjectCards('incomplete');
 });
 
@@ -67,6 +67,7 @@ function createNewProjectButtonEvent() {
     addDeleteProjectButtonEvent(currentProjects.length - 1);
     buildCurrentAndCompleteProjects();
     addCurrentProjectsButtonEvent();
+    projectsCounter();
     deleteNewProjectForm();
   });
 }
@@ -157,12 +158,14 @@ function projectCompleteButtonAction() {
   currentProjects.splice(this.dataset.index, 1);
   addCompleteProjectsButtonEvent();
   buildCurrentAndCompleteProjects();
+  projectsCounter();
   showAllProjectCards('incomplete');
 }
 
 function projectDeleteButtonAction() {
   currentProjects.splice(this.dataset.index, 1);
   buildCurrentAndCompleteProjects();
+  projectsCounter();
   showAllProjectCards('incomplete');
 }
 
