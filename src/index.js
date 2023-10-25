@@ -3,7 +3,7 @@ import "./style.css";
 import { createNewProjectForm, deleteNewProjectForm, createNewTaskForm, deleteNewTaskForm,
          createProjectCard, createTasksSubCards, showAllProjectCards,
          createCurrentProjectCard, buildCurrentAndCompleteProjects, addTaskCompleteClass, 
-         addProjectCompleteClass, removeTaskCard, createCompleteProjectCard, projectsCounter } from "./DOMManipulation.js";
+         removeTaskCard, createCompleteProjectCard, projectsCounter, toggleProjectCompleteClass } from "./DOMManipulation.js";
 
 const currentProjects = [];
 const finishedProjects = [];
@@ -69,6 +69,7 @@ function createNewProjectButtonEvent() {
     addCurrentProjectsButtonEvent();
     projectsCounter();
     deleteNewProjectForm();
+    showAllProjectCards('incomplete');
   });
 }
 
@@ -125,11 +126,7 @@ export function addCompleteProjectsButtonEvent() {
 }
 
 export function addCompleteProjectButtonEvent(index) {
-  document.querySelector(`.complete-project-button-${index}`).addEventListener('click', projectCompleteButtonAction, true);
-}
-
-export function removeCompleteProjectButtonEvent(index) {
-  document.querySelector(`.complete-project-button-${index}`).removeEventListener('click', projectCompleteButtonAction, true);
+  document.querySelector(`.complete-project-button-${index}`).addEventListener('click', projectCompleteButtonAction);
 }
 
 export function addCompleteTaskButtonEvent() {
@@ -137,11 +134,7 @@ export function addCompleteTaskButtonEvent() {
 }
 
 export function addDeleteProjectButtonEvent(index) {
-  document.querySelector(`.delete-project-button-${index}`).addEventListener('click', projectDeleteButtonAction, true);
-}
-
-export function removeDeleteProjectButtonEvent(index) {
-  document.querySelector(`.delete-project-button-${index}`).removeEventListener('click', projectDeleteButtonAction, true);
+  document.querySelector(`.delete-project-button-${index}`).addEventListener('click', projectDeleteButtonAction);
 }
 
 export function addDeleteTaskButtonEvent() {
@@ -149,24 +142,48 @@ export function addDeleteTaskButtonEvent() {
 }
 
 function projectCompleteButtonAction() {
-  for(let i = 0; i < currentProjects[this.dataset.index].tasks.length; i++) {
-    if(!currentProjects[this.dataset.index].tasks[i].complete) return console.log('finish all tasks first');
+  if(document.querySelector(`.project-card-${this.dataset.index} > .tasks-sub-cards`).firstChild) {
+    if(!document.querySelector(`.project-card-${this.dataset.index}`).classList.contains('project-complete')) {
+      for(let i = 0; i < currentProjects[this.dataset.index].tasks.length; i++) {
+        if(!currentProjects[this.dataset.index].tasks[i].complete) return console.log('finish all tasks first');
+      }
+    }
   }
-  currentProjects[this.dataset.index].complete = true;
-  addProjectCompleteClass(this.dataset.index);
-  finishedProjects.push(currentProjects[this.dataset.index]);
-  currentProjects.splice(this.dataset.index, 1);
-  addCompleteProjectsButtonEvent();
-  buildCurrentAndCompleteProjects();
-  projectsCounter();
-  showAllProjectCards('incomplete');
+    
+  if(this.parentNode.parentNode.classList.contains('project-complete')) {
+    finishedProjects[this.dataset.index].complete = false;
+    toggleProjectCompleteClass(this.dataset.index, 'remove');
+    currentProjects.push(finishedProjects[this.dataset.index]);
+    finishedProjects.splice(this.dataset.index, 1);
+    addCompleteProjectsButtonEvent();
+    buildCurrentAndCompleteProjects();
+    projectsCounter();
+    showAllProjectCards('complete');
+  } else {
+    currentProjects[this.dataset.index].complete = true;
+    toggleProjectCompleteClass(this.dataset.index, 'add');
+    finishedProjects.push(currentProjects[this.dataset.index]);
+    currentProjects.splice(this.dataset.index, 1);
+    addCompleteProjectsButtonEvent();
+    buildCurrentAndCompleteProjects();
+    projectsCounter();
+    showAllProjectCards('incomplete');
+  }
 }
 
 function projectDeleteButtonAction() {
-  currentProjects.splice(this.dataset.index, 1);
-  buildCurrentAndCompleteProjects();
-  projectsCounter();
-  showAllProjectCards('incomplete');
+  if(this.parentNode.parentNode.classList.contains('project-complete')) {
+    finishedProjects.splice(this.dataset.index, 1);
+    buildCurrentAndCompleteProjects();
+    projectsCounter();
+    showAllProjectCards('complete');
+  } else {
+    currentProjects.splice(this.dataset.index, 1);
+    buildCurrentAndCompleteProjects();
+    projectsCounter();
+    showAllProjectCards('incomplete');
+  }
+  
 }
 
 function taskCompleteButtonAction() {

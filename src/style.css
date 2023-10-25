@@ -65,21 +65,21 @@ footer {
   flex-direction: column;
 }
 
-.project-subcard {
+.project-sub-card {
   display: flex;
 }
 
-.tasks-subcards {
-  display: flex;
-  flex-direction: column;
-}
-
-.tasks-subcards > div {
+.tasks-sub-cards {
   display: flex;
   flex-direction: column;
 }
 
-.tasks-subcards > div > div {
+.tasks-sub-cards > div {
+  display: flex;
+  flex-direction: column;
+}
+
+.tasks-sub-cards > div > div {
   display: flex;
 }
 

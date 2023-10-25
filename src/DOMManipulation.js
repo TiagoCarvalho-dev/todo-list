@@ -1,6 +1,6 @@
-import { getCurrentProjects, getFinishedProjects,addCompleteProjectButtonEvent, removeCompleteProjectButtonEvent, 
-         addCurrentProjectsButtonEvent, addCompleteProjectsButtonEvent, addCompleteTaskButtonEvent, removeDeleteProjectButtonEvent, 
-         addDeleteProjectButtonEvent, addDeleteTaskButtonEvent } from "./index.js";
+import { getCurrentProjects, getFinishedProjects,addCompleteProjectButtonEvent, addCurrentProjectsButtonEvent, 
+         addCompleteProjectsButtonEvent, addCompleteTaskButtonEvent, addDeleteProjectButtonEvent, 
+         addDeleteTaskButtonEvent } from "./index.js";
 
 export function createNewProjectForm() {
   const newProjectDiv = document.querySelector('.new-project-form');
@@ -239,7 +239,7 @@ export function createProjectCard(name, priority, index, status) {
   const projectCardDiv = document.createElement('div');
   projectCardDiv.classList.add(`project-card-${index}`);
 
-  if(!status === 'incomplete') {
+  if(status !== 'incomplete') {
     projectCardDiv.classList.add('project-complete');
   }
 
@@ -416,9 +416,7 @@ export function showAllProjectCards(status) {
   if(status === 'incomplete') {
     for(let i = 0; i < getCurrentProjects().length; i++) {
       createProjectCard(getCurrentProjects()[i].name, getCurrentProjects()[i].priority, i, status);
-      removeCompleteProjectButtonEvent(i);
       addCompleteProjectButtonEvent(i);
-      removeDeleteProjectButtonEvent(i);
       addDeleteProjectButtonEvent(i);
       for(let j = 0; j < getCurrentProjects()[i].tasks.length; j++) {
         createTasksSubCards(getCurrentProjects()[i].tasks[j].name, getCurrentProjects()[i].tasks[j].date, 
@@ -428,9 +426,7 @@ export function showAllProjectCards(status) {
   } else {
     for(let i = 0; i < getFinishedProjects().length; i++) {
       createProjectCard(getFinishedProjects()[i].name, getFinishedProjects()[i].priority, i, status);
-      removeCompleteProjectButtonEvent(i);
       addCompleteProjectButtonEvent(i);
-      removeDeleteProjectButtonEvent(i);
       addDeleteProjectButtonEvent(i);
       for(let j = 0; j < getFinishedProjects()[i].tasks.length; j++) {
         createTasksSubCards(getFinishedProjects()[i].tasks[j].name, getFinishedProjects()[i].tasks[j].date, 
@@ -470,8 +466,9 @@ export function addTaskCompleteClass(project, index) {
   document.querySelector(`.project-card-${project} > .tasks-sub-cards > .task-${index}`).classList.add('task-complete');
 }
 
-export function addProjectCompleteClass(index) {
-  document.querySelector(`.project-card-${index}`).classList.add('project-complete');
+export function toggleProjectCompleteClass(index, operation) {
+  if(operation === 'add') return document.querySelector(`.project-card-${index}`).classList.add('project-complete');
+  return document.querySelector(`.project-card-${index}`).classList.remove('project-complete');
 }
 
 export function projectsCounter() {
