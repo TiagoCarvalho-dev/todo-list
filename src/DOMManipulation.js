@@ -462,8 +462,9 @@ export function createCompleteProjectCard() {
   }
 }
 
-export function addTaskCompleteClass(project, index) {
-  document.querySelector(`.project-card-${project} > .tasks-sub-cards > .task-${index}`).classList.add('task-complete');
+export function toggleTaskCompleteClass(project, index, operation) {
+  if(operation === 'add') return document.querySelector(`.project-card-${project} > .tasks-sub-cards > .task-${index}`).classList.add('task-complete');
+  return document.querySelector(`.project-card-${project} > .tasks-sub-cards > .task-${index}`).classList.remove('task-complete');
 }
 
 export function toggleProjectCompleteClass(index, operation) {

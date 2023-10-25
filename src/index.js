@@ -2,7 +2,7 @@ import "./normalize.css";
 import "./style.css";
 import { createNewProjectForm, deleteNewProjectForm, createNewTaskForm, deleteNewTaskForm,
          createProjectCard, createTasksSubCards, showAllProjectCards,
-         createCurrentProjectCard, buildCurrentAndCompleteProjects, addTaskCompleteClass, 
+         createCurrentProjectCard, buildCurrentAndCompleteProjects, toggleTaskCompleteClass, 
          removeTaskCard, createCompleteProjectCard, projectsCounter, toggleProjectCompleteClass } from "./DOMManipulation.js";
 
 const currentProjects = [];
@@ -187,8 +187,13 @@ function projectDeleteButtonAction() {
 }
 
 function taskCompleteButtonAction() {
-  currentProjects[this.dataset.project].tasks[this.dataset.index].complete = true;
-  addTaskCompleteClass(this.dataset.project, this.dataset.index);
+  if(this.parentNode.parentNode.classList.contains('task-complete')) {
+    currentProjects[this.dataset.project].tasks[this.dataset.index].complete = false;
+    toggleTaskCompleteClass(this.dataset.project, this.dataset.index, 'remove');
+  } else {
+    currentProjects[this.dataset.project].tasks[this.dataset.index].complete = true;
+    toggleTaskCompleteClass(this.dataset.project, this.dataset.index, 'add');
+  }
 }
 
 function taskDeleteButtonAction() {
