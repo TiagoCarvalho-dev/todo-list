@@ -7,10 +7,26 @@ function createNewTaskButton() {
   const newTaskButton = document.createElement('button');
   newTaskButton.classList.add('new-task-button');
   newTaskButton.textContent = 'NEW TASK';
-  newTaskButton.addEventListener('click', () => document.querySelector('#new-task-dialog').showModal());
+  newTaskButton.addEventListener('click', () => {
+    document.querySelector('#new-task-dialog').showModal();
+    document.querySelector('.chosen-project').textContent = getCurrentProjects()[i].name;
+  });
 
   taskSubCardsDiv.appendChild(newTaskButton);
   }
+}
+
+function createCurrentProjectNewTaskButton(name, index) {
+  const taskSubCardsDiv = document.querySelector(`.project-card-${index} > .tasks-sub-cards`);
+  const newTaskButton = document.createElement('button');
+  newTaskButton.classList.add('new-task-button');
+  newTaskButton.textContent = 'NEW TASK';
+  newTaskButton.addEventListener('click', () => {
+    document.querySelector('#new-task-dialog').showModal();
+    document.querySelector('.chosen-project').textContent = name;
+  });
+
+  taskSubCardsDiv.appendChild(newTaskButton);
 }
 
 export function createProjectCard(name, priority, index, status) {
@@ -230,7 +246,7 @@ function createCurrentProjectCard() {
     createTasksSubCards(selectedProject[0].tasks[i].name, selectedProject[0].tasks[i].date, selectedProject[0].tasks[i].time, 
                         selectedProject[0].tasks[i].priority, getCurrentProjects().indexOf(selectedProject[0]), i, 'incomplete');
   }
-  createNewTaskButton();
+  createCurrentProjectNewTaskButton(selectedProject[0].name, getCurrentProjects().indexOf(selectedProject[0]));
 }
 
 function createCompleteProjectCard() {
@@ -266,7 +282,7 @@ function addCurrentProjectsButtonEvent() {
   allProjects.forEach(button => button.addEventListener('click', createCurrentProjectCard));
 }
 
-function addCompleteProjectsButtonEvent() {
+export function addCompleteProjectsButtonEvent() {
   const allProjects = document.querySelectorAll('.complete-projects > button');
   allProjects.forEach(button => button.addEventListener('click', createCompleteProjectCard));
 }

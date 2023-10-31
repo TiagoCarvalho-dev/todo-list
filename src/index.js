@@ -2,7 +2,7 @@ import "./normalize.css";
 import "./style.css";
 import { createTasksSubCards, showAllProjectCards, buildCurrentAndCompleteProjects, 
          toggleTaskCompleteClass, removeTaskCard, projectsCounter, 
-         toggleProjectCompleteClass } from "./DOMManipulation.js";
+         toggleProjectCompleteClass, addCompleteProjectsButtonEvent } from "./DOMManipulation.js";
 
 const currentProjects = [];
 const finishedProjects = [];
