@@ -2,7 +2,8 @@ import "./normalize.css";
 import "./style.css";
 import { createTasksSubCards, showAllProjectCards, buildCurrentAndCompleteProjects, 
          toggleTaskCompleteClass, removeTaskCard, projectsCounter, 
-         toggleProjectCompleteClass, addCompleteProjectsButtonEvent } from "./DOMManipulation.js";
+         toggleProjectCompleteClass, addCompleteProjectsButtonEvent, createCurrentProjectNewTaskButton, 
+         removeNewTaskButton } from "./DOMManipulation.js";
 
 const currentProjects = [];
 const finishedProjects = [];
@@ -73,7 +74,6 @@ document.querySelector('.create-task-button').addEventListener('click', () => {
 });
 
 function createNewTaskButtonEvent() {
-    if(!document.querySelector('#chosen-project').value) return console.log('Select valid project');
     if(!document.querySelector('#task-name').value) return console.log('Select valid name');
     if(!document.querySelector('#task-date').value) return console.log('Select valid date');
     if(!document.querySelector('#task-time').value) return console.log('Select valid time');
@@ -89,9 +89,11 @@ function createNewTaskButtonEvent() {
       newTask = new Task(document.querySelector('#task-name').value, document.querySelector('#task-date').value, 
                          document.querySelector('#task-time').value, document.querySelector('#high-priority').value);
     }
-    currentProjects[document.querySelector('#chosen-project').value].tasks.push(newTask);
-    createTasksSubCards(newTask.name, newTask.date, newTask.time, newTask.priority, document.querySelector('#chosen-project').value, 
-                        currentProjects[document.querySelector('#chosen-project').value].tasks.length - 1, 'incomplete');
+    currentProjects[document.querySelector('.chosen-project').dataset.index].tasks.push(newTask);
+    createTasksSubCards(newTask.name, newTask.date, newTask.time, newTask.priority, document.querySelector('.chosen-project').dataset.index, 
+                        currentProjects[document.querySelector('.chosen-project').dataset.index].tasks.length - 1, 'incomplete');
+    removeNewTaskButton(document.querySelector('.chosen-project').dataset.index);
+    createCurrentProjectNewTaskButton(currentProjects[document.querySelector('.chosen-project').dataset.index].name, document.querySelector('.chosen-project').dataset.index);
 }
 
 document.querySelector('.all-complete-button').addEventListener('click', () => {
@@ -154,7 +156,7 @@ export function taskCompleteButtonAction() {
 
 export function taskDeleteButtonAction() {
   currentProjects[this.dataset.project].tasks.splice(this.dataset.index, 1);
-  removeTaskCard(this.dataset.project);
+  removeTaskCard(currentProjects[this.dataset.project].name, this.dataset.project);
 }
 
 showAllProjectCards('incomplete');

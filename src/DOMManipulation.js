@@ -10,13 +10,14 @@ function createNewTaskButton() {
   newTaskButton.addEventListener('click', () => {
     document.querySelector('#new-task-dialog').showModal();
     document.querySelector('.chosen-project').textContent = getCurrentProjects()[i].name;
+    document.querySelector('.chosen-project').dataset.index = i;
   });
 
   taskSubCardsDiv.appendChild(newTaskButton);
   }
 }
 
-function createCurrentProjectNewTaskButton(name, index) {
+export function createCurrentProjectNewTaskButton(name, index) {
   const taskSubCardsDiv = document.querySelector(`.project-card-${index} > .tasks-sub-cards`);
   const newTaskButton = document.createElement('button');
   newTaskButton.classList.add('new-task-button');
@@ -27,6 +28,11 @@ function createCurrentProjectNewTaskButton(name, index) {
   });
 
   taskSubCardsDiv.appendChild(newTaskButton);
+}
+
+export function removeNewTaskButton(index) {
+  const taskSubCardsDiv = document.querySelector(`.project-card-${index} > .tasks-sub-cards`);
+  taskSubCardsDiv.removeChild(taskSubCardsDiv.lastChild.previousSibling);
 }
 
 export function createProjectCard(name, priority, index, status) {
@@ -138,12 +144,13 @@ export function createTasksSubCards(name, date, time, priority, project, index, 
   }
 }
 
-export function removeTaskCard(project) {
-  removeAllTasksCards(project);
-  for(let i = 0; i < getCurrentProjects()[project].tasks.length; i++) {
-    createTasksSubCards(getCurrentProjects()[project].tasks[i].name, getCurrentProjects()[project].tasks[i].date, 
-                        getCurrentProjects()[project].tasks[i].time, getCurrentProjects()[project].tasks[i].priority, project, i, 'incomplete');
+export function removeTaskCard(projectName, projectIndex) {
+  removeAllTasksCards(projectIndex);
+  for(let i = 0; i < getCurrentProjects()[projectIndex].tasks.length; i++) {
+    createTasksSubCards(getCurrentProjects()[projectIndex].tasks[i].name, getCurrentProjects()[projectIndex].tasks[i].date, 
+                        getCurrentProjects()[projectIndex].tasks[i].time, getCurrentProjects()[projectIndex].tasks[i].priority, projectIndex, i, 'incomplete');
   }
+  createCurrentProjectNewTaskButton(projectName, projectIndex);
 }
 
 function noProjectsAvailableText() {
