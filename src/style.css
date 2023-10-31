@@ -8,15 +8,13 @@ nav {
   grid-row: 1 / 2;
   grid-column: 1 / 4;
   display: flex;
+  justify-content: space-between;
 }
 
 .nav-left-side,
+.nav-middle,
 .nav-right-side {
   display: flex;
-}
-
-.nav-right-side {
-  margin-left: auto;
 }
 
 .left-menu {

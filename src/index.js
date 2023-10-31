@@ -1,9 +1,8 @@
 import "./normalize.css";
 import "./style.css";
-import { createNewProjectForm, deleteNewProjectForm, createNewTaskForm, deleteNewTaskForm,
-         createProjectCard, createTasksSubCards, showAllProjectCards,
-         createCurrentProjectCard, buildCurrentAndCompleteProjects, toggleTaskCompleteClass, 
-         removeTaskCard, createCompleteProjectCard, projectsCounter, toggleProjectCompleteClass } from "./DOMManipulation.js";
+import { createTasksSubCards, showAllProjectCards, buildCurrentAndCompleteProjects, 
+         toggleTaskCompleteClass, removeTaskCard, projectsCounter, 
+         toggleProjectCompleteClass } from "./DOMManipulation.js";
 
 const currentProjects = [];
 const finishedProjects = [];
@@ -37,20 +36,18 @@ document.querySelector('.all-current-button').addEventListener('click',() => {
 });
 
 document.querySelector('.new-project-button').addEventListener('click', () => {
-  if(document.querySelector('.new-task-form').firstChild) {
-    deleteNewTaskForm();
-  }
+  document.querySelector('#new-project-dialog').showModal();
+});
 
-  if(document.querySelector('.new-project-form').firstChild) {
-    deleteNewProjectForm();
-  } else {
-    createNewProjectForm();
-    createNewProjectButtonEvent();
-  }
+document.querySelector('.cancel-project-button').addEventListener('click', () => {
+  document.querySelector('#new-project-dialog').close();
+});
+
+document.querySelector('.create-project-button').addEventListener('click', () => {
+  createNewProjectButtonEvent();
 });
 
 function createNewProjectButtonEvent() {
-  document.querySelector('.create-new-project-button').addEventListener('click', () => {
     if(!document.querySelector('#project-name').value) return console.log('Please insert a project name.');
 
     let newProject;
@@ -62,32 +59,20 @@ function createNewProjectButtonEvent() {
       newProject = new Project(document.querySelector('#project-name').value, document.querySelector('#high-priority').value);
     }
     currentProjects.push(newProject);
-    createProjectCard(newProject.name, newProject.priority, currentProjects.length - 1, 'incomplete');
-    addCompleteProjectButtonEvent(currentProjects.length - 1);
-    addDeleteProjectButtonEvent(currentProjects.length - 1);
-    buildCurrentAndCompleteProjects();
-    addCurrentProjectsButtonEvent();
-    projectsCounter();
-    deleteNewProjectForm();
     showAllProjectCards('incomplete');
-  });
+    buildCurrentAndCompleteProjects();
+    projectsCounter();
 }
 
-document.querySelector('.new-task-button').addEventListener('click', () => {
-  if(document.querySelector('.new-project-form').firstChild) {
-    deleteNewProjectForm();
-  }
+document.querySelector('.cancel-task-button').addEventListener('click', () => {
+  document.querySelector('#new-task-dialog').close();
+});
 
-  if(document.querySelector('.new-task-form').firstChild) {
-    deleteNewTaskForm();
-  } else {
-    createNewTaskForm();
-    createNewTaskButtonEvent();
-  }
+document.querySelector('.create-task-button').addEventListener('click', () => {
+  createNewTaskButtonEvent();
 });
 
 function createNewTaskButtonEvent() {
-  document.querySelector('.create-new-task-button').addEventListener('click', () => {
     if(!document.querySelector('#chosen-project').value) return console.log('Select valid project');
     if(!document.querySelector('#task-name').value) return console.log('Select valid name');
     if(!document.querySelector('#task-date').value) return console.log('Select valid date');
@@ -107,41 +92,13 @@ function createNewTaskButtonEvent() {
     currentProjects[document.querySelector('#chosen-project').value].tasks.push(newTask);
     createTasksSubCards(newTask.name, newTask.date, newTask.time, newTask.priority, document.querySelector('#chosen-project').value, 
                         currentProjects[document.querySelector('#chosen-project').value].tasks.length - 1, 'incomplete');
-    deleteNewTaskForm();
-  });
 }
 
 document.querySelector('.all-complete-button').addEventListener('click', () => {
   showAllProjectCards('complete');
 });
 
-export function addCurrentProjectsButtonEvent() {
-  const allProjects = document.querySelectorAll('.current-projects > button');
-  allProjects.forEach(button => button.addEventListener('click', createCurrentProjectCard));
-}
-
-export function addCompleteProjectsButtonEvent() {
-  const allProjects = document.querySelectorAll('.complete-projects > button');
-  allProjects.forEach(button => button.addEventListener('click', createCompleteProjectCard));
-}
-
-export function addCompleteProjectButtonEvent(index) {
-  document.querySelector(`.complete-project-button-${index}`).addEventListener('click', projectCompleteButtonAction);
-}
-
-export function addCompleteTaskButtonEvent() {
-  document.querySelector(`.complete-task-button-${this.dataset.project}-${this.dataset.index}`).addEventListener('click', taskCompleteButtonAction);
-}
-
-export function addDeleteProjectButtonEvent(index) {
-  document.querySelector(`.delete-project-button-${index}`).addEventListener('click', projectDeleteButtonAction);
-}
-
-export function addDeleteTaskButtonEvent() {
-  document.querySelector(`.delete-task-button-${this.dataset.project}-${this.dataset.index}`).addEventListener('click', taskDeleteButtonAction);
-}
-
-function projectCompleteButtonAction() {
+export function projectCompleteButtonAction() {
   if(document.querySelector(`.project-card-${this.dataset.index} > .tasks-sub-cards`).firstChild) {
     if(!document.querySelector(`.project-card-${this.dataset.index}`).classList.contains('project-complete')) {
       for(let i = 0; i < currentProjects[this.dataset.index].tasks.length; i++) {
@@ -171,7 +128,7 @@ function projectCompleteButtonAction() {
   }
 }
 
-function projectDeleteButtonAction() {
+export function projectDeleteButtonAction() {
   if(this.parentNode.parentNode.classList.contains('project-complete')) {
     finishedProjects.splice(this.dataset.index, 1);
     buildCurrentAndCompleteProjects();
@@ -183,10 +140,9 @@ function projectDeleteButtonAction() {
     projectsCounter();
     showAllProjectCards('incomplete');
   }
-  
 }
 
-function taskCompleteButtonAction() {
+export function taskCompleteButtonAction() {
   if(this.parentNode.parentNode.classList.contains('task-complete')) {
     currentProjects[this.dataset.project].tasks[this.dataset.index].complete = false;
     toggleTaskCompleteClass(this.dataset.project, this.dataset.index, 'remove');
@@ -196,7 +152,7 @@ function taskCompleteButtonAction() {
   }
 }
 
-function taskDeleteButtonAction() {
+export function taskDeleteButtonAction() {
   currentProjects[this.dataset.project].tasks.splice(this.dataset.index, 1);
   removeTaskCard(this.dataset.project);
 }

@@ -9,7 +9,10 @@
 <body>
   <nav>
     <div class="nav-left-side">
-      <button class="search-button">SEARCH</button>
+      <h1>Planner</h1>
+    </div>
+    <div class="nav-middle">
+      <button class="new-project-button">NEW PROJECT</button>
     </div>
     <div class="nav-right-side">
       <button class="dark-mode">DARK MODE</button>
@@ -21,10 +24,7 @@
       <button class="all-complete-button">Complete (0)</button>
     </div>
     <div class="new-project-container">
-      <button class="new-project-button">NEW PROJECT</button>
-      <div class="new-project-form"></div>
       <button class="new-task-button">NEW TASK</button>
-      <div class="new-task-form"></div>
     </div>
   </div>
   <div class="main-section"></div>
@@ -42,5 +42,65 @@
     <p>TiagoCarvalho-dev</p>
     <a href="https://github.com/TiagoCarvalho-dev"><img src="../src/images/github.svg" alt="Github Logo" width="30px" height="auto"></a>
   </footer>
+
+  <dialog id="new-project-dialog">
+    <form method="dialog">
+      <div class="project-name-container">
+        <label for="project-name">Project Name</label>
+        <input type="text" name="project-name" id="project-name">
+      </div>
+      <div class="project-priority-container">
+        <legend>Priority</legend>
+        <div class="project-radio-container">
+          <input type="radio" id="low-priority" name="priority" value="low-priority" checked>
+          <label for="low-priority">Low</label>
+          <input type="radio" id="medium-priority" name="priority" value="medium-priority">
+          <label for="medium-priority">Medium</label>
+          <input type="radio" id="high-priority" name="priority" value="high-priority">
+          <label for="high-priority">High</label>
+        </div>
+      </div>
+      <div class="buttons">
+        <button class="cancel-project-button">Cancel</button>
+        <button class="create-project-button">Create</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="new-task-dialog">
+    <form method="dialog">
+      <div class="chosen-project-container">
+        <label for="chosen-project">Project</label>
+        <select name="chosen-project" id="chosen-project"></select>
+      </div>
+      <div class="task-name-container">
+        <label for="task-name-container">Task Name</label>
+        <input type="text" name="task-name" id="task-name">
+      </div>
+      <div class="task-date-container">
+        <label for="task-date">Due Date</label>
+        <input type="date" name="task-date" id="task-date">
+      </div>
+      <div class="task-time-container">
+        <label for="task-time">Due Time</label>
+        <input type="time" name="task-time" id="task-time">
+      </div>
+      <div class="task-priority-container">
+        <legend>Priority</legend>
+        <div class="task-radio-container">
+          <input type="radio" id="low-priority" name="priority" value="low-priority" checked>
+          <label for="low-priority">Low</label>
+          <input type="radio" id="medium-priority" name="priority" value="medium-priority">
+          <label for="medium-priority">Medium</label>
+          <input type="radio" id="high-priority" name="priority" value="high-priority">
+          <label for="high-priority">High</label>
+        </div>
+      </div>
+      <div class="buttons">
+        <button class="cancel-task-button">Cancel</button>
+        <button class="create-task-button">Create</button>
+      </div>
+    </form>
+  </dialog>
 </body>
 </html>
