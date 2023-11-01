@@ -25,6 +25,7 @@ export function createCurrentProjectNewTaskButton(name, index) {
   newTaskButton.addEventListener('click', () => {
     document.querySelector('#new-task-dialog').showModal();
     document.querySelector('.chosen-project').textContent = name;
+    document.querySelector('.chosen-project').dataset.index = index;
   });
 
   taskSubCardsDiv.appendChild(newTaskButton);
@@ -191,10 +192,14 @@ export function buildCurrentAndCompleteProjects() {
 
 function removeAllCurrentAndCompleteProjects() {
   const currentProjectsDiv = document.querySelector('.current-projects');
-  currentProjectsDiv.replaceChildren(currentProjectsDiv.firstElementChild);
+  while(currentProjectsDiv.firstChild) {
+    currentProjectsDiv.removeChild(currentProjectsDiv.lastChild);
+  }
 
   const completeProjectsDiv = document.querySelector('.complete-projects');
-  completeProjectsDiv.replaceChildren(completeProjectsDiv.firstElementChild);
+  while(completeProjectsDiv.firstChild) {
+    completeProjectsDiv.removeChild(completeProjectsDiv.lastChild);
+  }
 }
 
 function removeAllProjectCards() {
