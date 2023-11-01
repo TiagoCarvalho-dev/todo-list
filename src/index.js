@@ -11,6 +11,11 @@ const finishedProjects = [];
 export function getCurrentProjects() { return currentProjects }
 export function getFinishedProjects() { return finishedProjects }
 
+function sortProjects() {
+  currentProjects.sort((a,b) => a.name.localeCompare(b.name));
+  finishedProjects.sort((a,b) => a.name.localeCompare(b.name));
+}
+
 class Project {
   constructor(name, priority) {
     this.name = name;
@@ -33,6 +38,7 @@ class Task {
 }
 
 document.querySelector('.all-current-button').addEventListener('click',() => {
+  sortProjects();
   showAllProjectCards('incomplete');
 });
 
@@ -50,6 +56,10 @@ document.querySelector('.create-project-button').addEventListener('click', () =>
 
 function createNewProjectButtonEvent() {
     if(!document.querySelector('#project-name').value) return console.log('Please insert a project name.');
+    // console.log(document.querySelector('#project-name').value);
+    // const nameCheck = currentProjects.filter(project => project.name === document.querySelector('#project-name').value);
+    // console.log(nameCheck.name);
+    // if(nameCheck.name === document.querySelector('#project-name').value) return 'Please choose a different name';
 
     let newProject;
     if(document.querySelector('#low-priority').checked) {
@@ -60,6 +70,7 @@ function createNewProjectButtonEvent() {
       newProject = new Project(document.querySelector('#project-name').value, document.querySelector('#high-priority').value);
     }
     currentProjects.push(newProject);
+    sortProjects();
     showAllProjectCards('incomplete');
     buildCurrentAndCompleteProjects();
     projectsCounter();
@@ -97,6 +108,7 @@ function createNewTaskButtonEvent() {
 }
 
 document.querySelector('.all-complete-button').addEventListener('click', () => {
+  sortProjects();
   showAllProjectCards('complete');
 });
 
@@ -114,6 +126,7 @@ export function projectCompleteButtonAction() {
     toggleProjectCompleteClass(this.dataset.index, 'remove');
     currentProjects.push(finishedProjects[this.dataset.index]);
     finishedProjects.splice(this.dataset.index, 1);
+    sortProjects();
     addCompleteProjectsButtonEvent();
     buildCurrentAndCompleteProjects();
     projectsCounter();
@@ -123,6 +136,7 @@ export function projectCompleteButtonAction() {
     toggleProjectCompleteClass(this.dataset.index, 'add');
     finishedProjects.push(currentProjects[this.dataset.index]);
     currentProjects.splice(this.dataset.index, 1);
+    sortProjects();
     addCompleteProjectsButtonEvent();
     buildCurrentAndCompleteProjects();
     projectsCounter();
@@ -133,11 +147,13 @@ export function projectCompleteButtonAction() {
 export function projectDeleteButtonAction() {
   if(this.parentNode.parentNode.classList.contains('project-complete')) {
     finishedProjects.splice(this.dataset.index, 1);
+    sortProjects();
     buildCurrentAndCompleteProjects();
     projectsCounter();
     showAllProjectCards('complete');
   } else {
     currentProjects.splice(this.dataset.index, 1);
+    sortProjects();
     buildCurrentAndCompleteProjects();
     projectsCounter();
     showAllProjectCards('incomplete');
