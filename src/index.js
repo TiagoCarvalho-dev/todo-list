@@ -5,8 +5,8 @@ import { createTasksSubCards, showAllProjectCards, buildCurrentAndCompleteProjec
          toggleProjectCompleteClass, addCompleteProjectsButtonEvent, createCurrentProjectNewTaskButton, 
          removeNewTaskButton } from "./DOMManipulation.js";
 
-const currentProjects = [];
-const finishedProjects = [];
+let currentProjects = [];
+let finishedProjects = [];
 
 export function getCurrentProjects() { return currentProjects }
 export function getFinishedProjects() { return finishedProjects }
@@ -56,10 +56,10 @@ document.querySelector('.create-project-button').addEventListener('click', () =>
 
 function createNewProjectButtonEvent() {
     if(!document.querySelector('#project-name').value) return console.log('Please insert a project name.');
-    // console.log(document.querySelector('#project-name').value);
-    // const nameCheck = currentProjects.filter(project => project.name === document.querySelector('#project-name').value);
-    // console.log(nameCheck.name);
-    // if(nameCheck.name === document.querySelector('#project-name').value) return 'Please choose a different name';
+
+    for(let i = 0; i < currentProjects.length; i++) {
+      if(document.querySelector('#project-name').value.toLowerCase() === currentProjects[i].name.toLowerCase()) return console.log('Choose another name');
+    }
 
     let newProject;
     if(document.querySelector('#low-priority').checked) {
@@ -71,6 +71,7 @@ function createNewProjectButtonEvent() {
     }
     currentProjects.push(newProject);
     sortProjects();
+    updateLocalStorage();
     showAllProjectCards('incomplete');
     buildCurrentAndCompleteProjects();
     projectsCounter();
@@ -101,6 +102,7 @@ function createNewTaskButtonEvent() {
                          document.querySelector('#task-time').value, document.querySelector('#high-priority').value);
     }
     currentProjects[document.querySelector('.chosen-project').dataset.index].tasks.push(newTask);
+    updateLocalStorage();
     createTasksSubCards(newTask.name, newTask.date, newTask.time, newTask.priority, document.querySelector('.chosen-project').dataset.index, 
                         currentProjects[document.querySelector('.chosen-project').dataset.index].tasks.length - 1, 'incomplete');
     removeNewTaskButton(document.querySelector('.chosen-project').dataset.index);
@@ -127,6 +129,7 @@ export function projectCompleteButtonAction() {
     currentProjects.push(finishedProjects[this.dataset.index]);
     finishedProjects.splice(this.dataset.index, 1);
     sortProjects();
+    updateLocalStorage();
     addCompleteProjectsButtonEvent();
     buildCurrentAndCompleteProjects();
     projectsCounter();
@@ -137,6 +140,7 @@ export function projectCompleteButtonAction() {
     finishedProjects.push(currentProjects[this.dataset.index]);
     currentProjects.splice(this.dataset.index, 1);
     sortProjects();
+    updateLocalStorage();
     addCompleteProjectsButtonEvent();
     buildCurrentAndCompleteProjects();
     projectsCounter();
@@ -148,12 +152,14 @@ export function projectDeleteButtonAction() {
   if(this.parentNode.parentNode.classList.contains('project-complete')) {
     finishedProjects.splice(this.dataset.index, 1);
     sortProjects();
+    updateLocalStorage();
     buildCurrentAndCompleteProjects();
     projectsCounter();
     showAllProjectCards('complete');
   } else {
     currentProjects.splice(this.dataset.index, 1);
     sortProjects();
+    updateLocalStorage();
     buildCurrentAndCompleteProjects();
     projectsCounter();
     showAllProjectCards('incomplete');
@@ -163,16 +169,38 @@ export function projectDeleteButtonAction() {
 export function taskCompleteButtonAction() {
   if(this.parentNode.parentNode.classList.contains('task-complete')) {
     currentProjects[this.dataset.project].tasks[this.dataset.index].complete = false;
+    updateLocalStorage();
     toggleTaskCompleteClass(this.dataset.project, this.dataset.index, 'remove');
   } else {
     currentProjects[this.dataset.project].tasks[this.dataset.index].complete = true;
+    updateLocalStorage();
     toggleTaskCompleteClass(this.dataset.project, this.dataset.index, 'add');
   }
 }
 
 export function taskDeleteButtonAction() {
   currentProjects[this.dataset.project].tasks.splice(this.dataset.index, 1);
+  updateLocalStorage();
   removeTaskCard(currentProjects[this.dataset.project].name, this.dataset.project);
 }
 
-showAllProjectCards('incomplete');
+function updateLocalStorage() {
+  localStorage.setItem('currentProjects', JSON.stringify(currentProjects));
+  localStorage.setItem('finishedProjects', JSON.stringify(finishedProjects));
+}
+
+function openingPage() {
+  if(JSON.parse(localStorage.getItem('currentProjects'))) {
+    currentProjects = JSON.parse(localStorage.getItem('currentProjects'));
+    finishedProjects = JSON.parse(localStorage.getItem('finishedProjects'));
+    showAllProjectCards('incomplete');
+    buildCurrentAndCompleteProjects();
+    projectsCounter();
+  } else {
+    showAllProjectCards('incomplete');
+    buildCurrentAndCompleteProjects();
+    projectsCounter();
+  }
+}
+
+openingPage();

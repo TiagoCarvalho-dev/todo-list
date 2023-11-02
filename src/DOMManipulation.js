@@ -64,6 +64,7 @@ export function createProjectCard(name, priority, index, status) {
 
   const deleteProjectButton = document.createElement('button');
   deleteProjectButton.classList.add(`delete-project-button-${index}`);
+  deleteProjectButton.dataset.index = index;
   deleteProjectButton.textContent = 'DELETE';
 
   projectSubCardDiv.appendChild(projectName);
