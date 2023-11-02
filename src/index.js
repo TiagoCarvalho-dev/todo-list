@@ -57,10 +57,24 @@ document.querySelector('.create-project-button').addEventListener('click', () =>
 });
 
 function createNewProjectButtonEvent() {
-    if(!document.querySelector('#project-name').value) return console.log('Please insert a project name.');
+    if(!document.querySelector('#project-name').value) {
+      const fillAllProjectInformationDialog = document.querySelector('#fill-all-project-information-alert');
+      fillAllProjectInformationDialog.showModal();
+      document.querySelector('.ok-button-project-information-alert').onclick = () => {
+        fillAllProjectInformationDialog.close();
+      }
+      return
+    }
 
     for(let i = 0; i < currentProjects.length; i++) {
-      if(document.querySelector('#project-name').value.toLowerCase() === currentProjects[i].name.toLowerCase()) return console.log('Choose another name');
+      if(document.querySelector('#project-name').value.toLowerCase() === currentProjects[i].name.toLowerCase()) {
+        const existingProjectNameDialog = document.querySelector('#existing-name-alert');
+        existingProjectNameDialog.showModal();
+        document.querySelector('.ok-button-existing-name').onclick = () => {
+          existingProjectNameDialog.close();
+        }
+      return
+      }
     }
 
     let newProject;
@@ -90,9 +104,16 @@ document.querySelector('.create-task-button').addEventListener('click', () => {
 });
 
 function createNewTaskButtonEvent() {
-    if(!document.querySelector('#task-name').value) return console.log('Select valid name');
-    if(!document.querySelector('#task-date').value) return console.log('Select valid date');
-    if(!document.querySelector('#task-time').value) return console.log('Select valid time');
+    if(!document.querySelector('#task-name').value ||
+       !document.querySelector('#task-date').value ||
+       !document.querySelector('#task-time').value) {
+      const fillAllTaskInformationDialog = document.querySelector('#fill-all-task-information-alert');
+      fillAllTaskInformationDialog.showModal();
+      document.querySelector('.ok-button-task-information-alert').onclick = () => {
+        fillAllTaskInformationDialog.close();
+      }
+      return
+    }
 
     let newTask;
     if(document.querySelector('#low-priority').checked) {
@@ -201,14 +222,31 @@ export function projectDeleteButtonAction() {
 }
 
 export function taskCompleteButtonAction() {
+  const confirmTaskCompleteDialog = document.querySelector('#confirm-complete-task');
+  const confirmTaskIncompleteDialog = document.querySelector('#confirm-incomplete-task');
+
   if(this.parentNode.parentNode.classList.contains('task-complete')) {
-    currentProjects[this.dataset.project].tasks[this.dataset.index].complete = false;
-    updateLocalStorage();
-    toggleTaskCompleteClass(this.dataset.project, this.dataset.index, 'remove');
+    confirmTaskIncompleteDialog.showModal();
+    document.querySelector('.yes-button-incomplete-task').onclick = () => {
+      currentProjects[this.dataset.project].tasks[this.dataset.index].complete = false;
+      updateLocalStorage();
+      toggleTaskCompleteClass(this.dataset.project, this.dataset.index, 'remove');
+      confirmTaskIncompleteDialog.close();
+    }
+    document.querySelector('.no-button-incomplete-task').onclick = () => {
+      confirmTaskIncompleteDialog.close();
+    }
   } else {
-    currentProjects[this.dataset.project].tasks[this.dataset.index].complete = true;
-    updateLocalStorage();
-    toggleTaskCompleteClass(this.dataset.project, this.dataset.index, 'add');
+    confirmTaskCompleteDialog.showModal();
+    document.querySelector('.yes-button-complete-task').onclick = () => {
+      currentProjects[this.dataset.project].tasks[this.dataset.index].complete = true;
+      updateLocalStorage();
+      toggleTaskCompleteClass(this.dataset.project, this.dataset.index, 'add');
+      confirmTaskCompleteDialog.close();
+    }
+    document.querySelector('.no-button-complete-task').onclick = () => {
+      confirmTaskCompleteDialog.close();
+    }
   }
 }
 
