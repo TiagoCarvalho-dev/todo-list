@@ -1,3 +1,4 @@
+import { format, parseISO } from "date-fns";
 import { getCurrentProjects, getFinishedProjects, projectCompleteButtonAction, 
          projectDeleteButtonAction, taskCompleteButtonAction, taskDeleteButtonAction } from "./index.js";
 
@@ -127,7 +128,7 @@ export function createTasksSubCards(name, date, time, priority, project, index, 
     const detailsDiv = document.createElement('div');
 
     const taskDate = document.createElement('p');
-    taskDate.textContent = date;
+    taskDate.textContent = date.toLocaleDateString();
 
     const taskTime = document.createElement('p');
     taskTime.textContent = time;
@@ -203,7 +204,7 @@ function removeAllCurrentAndCompleteProjects() {
   }
 }
 
-function removeAllProjectCards() {
+export function removeAllProjectCards() {
   const mainDiv = document.querySelector('.main-section');
   while(mainDiv.firstChild) {
     mainDiv.removeChild(mainDiv.lastChild);
@@ -273,6 +274,16 @@ function createCompleteProjectCard() {
     createTasksSubCards(selectedProject[0].tasks[i].name, selectedProject[0].tasks[i].date, selectedProject[0].tasks[i].time, 
                         selectedProject[0].tasks[i].priority, getFinishedProjects().indexOf(selectedProject[0]), i, 'complete');
   }
+}
+
+export function createTodayProjectCards(projectName, projectPriority, projectIndex, status) {
+  createProjectCard(projectName, projectPriority, projectIndex, status);
+  addCompleteProjectButtonEvent(projectIndex);
+  addDeleteProjectButtonEvent(projectIndex);
+}
+
+export function createTodayTasksSubCards(taskName, taskDate, taskTime, taskPriority, projectIndex, taskIndex, status) {
+  createTasksSubCards(taskName, taskDate, taskTime, taskPriority, projectIndex, taskIndex, status);
 }
 
 export function toggleTaskCompleteClass(project, index, operation) {

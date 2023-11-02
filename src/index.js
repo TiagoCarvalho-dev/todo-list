@@ -1,9 +1,10 @@
 import "./normalize.css";
 import "./style.css";
+import { format, parseISO, formatDistanceToNow } from "date-fns";
 import { createTasksSubCards, showAllProjectCards, buildCurrentAndCompleteProjects, 
          toggleTaskCompleteClass, removeTaskCard, projectsCounter, 
          toggleProjectCompleteClass, addCompleteProjectsButtonEvent, createCurrentProjectNewTaskButton, 
-         removeNewTaskButton } from "./DOMManipulation.js";
+         removeNewTaskButton, createTodayProjectCards, removeAllProjectCards, createTodayTasksSubCards } from "./DOMManipulation.js";
 
 let currentProjects = [];
 let finishedProjects = [];
@@ -117,13 +118,13 @@ function createNewTaskButtonEvent() {
 
     let newTask;
     if(document.querySelector('#low-priority').checked) {
-      newTask = new Task(document.querySelector('#task-name').value, document.querySelector('#task-date').value, 
+      newTask = new Task(document.querySelector('#task-name').value, new Date(new Date(document.querySelector('#task-date').value).getTime() - new Date(document.querySelector('#task-date').value).getTimezoneOffset() * -60000), 
                          document.querySelector('#task-time').value, document.querySelector('#low-priority').value);
     } else if(document.querySelector('#medium-priority').checked) {
-      newTask = new Task(document.querySelector('#task-name').value, document.querySelector('#task-date').value, 
+      newTask = new Task(document.querySelector('#task-name').value, new Date(new Date(document.querySelector('#task-date').value).getTime() - new Date(document.querySelector('#task-date').value).getTimezoneOffset() * -60000), 
                          document.querySelector('#task-time').value, document.querySelector('#medium-priority').value);
     } else if(document.querySelector('#high-priority').checked) {
-      newTask = new Task(document.querySelector('#task-name').value, document.querySelector('#task-date').value, 
+      newTask = new Task(document.querySelector('#task-name').value, new Date(new Date(document.querySelector('#task-date').value).getTime() - new Date(document.querySelector('#task-date').value).getTimezoneOffset() * -60000), 
                          document.querySelector('#task-time').value, document.querySelector('#high-priority').value);
     }
     currentProjects[document.querySelector('.chosen-project').dataset.index].tasks.push(newTask);
@@ -261,6 +262,32 @@ export function taskDeleteButtonAction() {
   }
   document.querySelector('.no-button-delete-task').onclick = () => {
     confirmDeleteTaskDialog.close();
+  }
+}
+
+document.querySelector('.today-button').addEventListener('click', filterTodayProjects);
+
+function filterTodayProjects() {
+  removeAllProjectCards();
+  const mainSectionProjects = [];
+  for(let i = 0; i < currentProjects.length; i++) {
+    for(let j = 0; j < currentProjects[i].tasks.length; j++) {
+      if(currentProjects[i].tasks[j].date.toLocaleDateString() === new Date().toLocaleDateString()) {
+        const filteredProject = mainSectionProjects.filter(project => project.name === currentProjects[i].name);
+        if(filteredProject.length > 0) {
+          createTodayTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
+                                   currentProjects[i].tasks[j].priority, i, j, 'incomplete');
+          removeNewTaskButton(i);
+          createCurrentProjectNewTaskButton(currentProjects[i].name, i);
+        } else {
+          createTodayProjectCards(currentProjects[i].name, currentProjects[i].priority, i, 'incomplete');
+          createTodayTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
+                                   currentProjects[i].tasks[j].priority, i, j, 'incomplete');
+          createCurrentProjectNewTaskButton(currentProjects[i].name, i);
+          mainSectionProjects.push(currentProjects[i]);
+        }
+      }
+    }
   }
 }
 
