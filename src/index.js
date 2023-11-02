@@ -48,10 +48,12 @@ document.querySelector('.new-project-button').addEventListener('click', () => {
 
 document.querySelector('.cancel-project-button').addEventListener('click', () => {
   document.querySelector('#new-project-dialog').close();
+  document.querySelector('.new-project-form').reset();
 });
 
 document.querySelector('.create-project-button').addEventListener('click', () => {
   createNewProjectButtonEvent();
+  document.querySelector('.new-project-form').reset();
 });
 
 function createNewProjectButtonEvent() {
@@ -79,10 +81,12 @@ function createNewProjectButtonEvent() {
 
 document.querySelector('.cancel-task-button').addEventListener('click', () => {
   document.querySelector('#new-task-dialog').close();
+  document.querySelector('.new-task-form').reset();
 });
 
 document.querySelector('.create-task-button').addEventListener('click', () => {
   createNewTaskButtonEvent();
+  document.querySelector('.new-task-form').reset();
 });
 
 function createNewTaskButtonEvent() {
@@ -118,51 +122,81 @@ export function projectCompleteButtonAction() {
   if(document.querySelector(`.project-card-${this.dataset.index} > .tasks-sub-cards`).firstChild) {
     if(!document.querySelector(`.project-card-${this.dataset.index}`).classList.contains('project-complete')) {
       for(let i = 0; i < currentProjects[this.dataset.index].tasks.length; i++) {
-        if(!currentProjects[this.dataset.index].tasks[i].complete) return console.log('finish all tasks first');
+        if(!currentProjects[this.dataset.index].tasks[i].complete) {
+          document.querySelector('#complete-all-tasks-alert').showModal();
+          document.querySelector('.ok-button-tasks-alert').onclick = () => document.querySelector('#complete-all-tasks-alert').close();
+          return
+        }
       }
     }
   }
-    
+
+  const confirmCompleteProjectDialog = document.querySelector('#confirm-complete-project');
+  const confirmIncompleteProjectDialog = document.querySelector('#confirm-incomplete-project');
+
   if(this.parentNode.parentNode.classList.contains('project-complete')) {
-    finishedProjects[this.dataset.index].complete = false;
-    toggleProjectCompleteClass(this.dataset.index, 'remove');
-    currentProjects.push(finishedProjects[this.dataset.index]);
-    finishedProjects.splice(this.dataset.index, 1);
-    sortProjects();
-    updateLocalStorage();
-    addCompleteProjectsButtonEvent();
-    buildCurrentAndCompleteProjects();
-    projectsCounter();
-    showAllProjectCards('complete');
+    confirmIncompleteProjectDialog.showModal();
+    document.querySelector('.yes-button-incomplete-project').onclick = () => {
+      finishedProjects[this.dataset.index].complete = false;
+      toggleProjectCompleteClass(this.dataset.index, 'remove');
+      currentProjects.push(finishedProjects[this.dataset.index]);
+      finishedProjects.splice(this.dataset.index, 1);
+      sortProjects();
+      updateLocalStorage();
+      addCompleteProjectsButtonEvent();
+      buildCurrentAndCompleteProjects();
+      projectsCounter();
+      showAllProjectCards('complete');
+      confirmIncompleteProjectDialog.close();
+    }
+    document.querySelector('.no-button-incomplete-project').onclick = () => {
+      confirmIncompleteProjectDialog.close();
+    }
   } else {
-    currentProjects[this.dataset.index].complete = true;
-    toggleProjectCompleteClass(this.dataset.index, 'add');
-    finishedProjects.push(currentProjects[this.dataset.index]);
-    currentProjects.splice(this.dataset.index, 1);
-    sortProjects();
-    updateLocalStorage();
-    addCompleteProjectsButtonEvent();
-    buildCurrentAndCompleteProjects();
-    projectsCounter();
-    showAllProjectCards('incomplete');
+    confirmCompleteProjectDialog.showModal();
+    document.querySelector('.yes-button-complete-project').onclick = () => {
+      currentProjects[this.dataset.index].complete = true;
+      toggleProjectCompleteClass(this.dataset.index, 'add');
+      finishedProjects.push(currentProjects[this.dataset.index]);
+      currentProjects.splice(this.dataset.index, 1);
+      sortProjects();
+      updateLocalStorage();
+      addCompleteProjectsButtonEvent();
+      buildCurrentAndCompleteProjects();
+      projectsCounter();
+      showAllProjectCards('incomplete');
+      confirmCompleteProjectDialog.close();
+    }
+    document.querySelector('.no-button-complete-project').onclick = () => {
+      confirmCompleteProjectDialog.close();
+    }
   }
 }
 
 export function projectDeleteButtonAction() {
-  if(this.parentNode.parentNode.classList.contains('project-complete')) {
-    finishedProjects.splice(this.dataset.index, 1);
-    sortProjects();
-    updateLocalStorage();
-    buildCurrentAndCompleteProjects();
-    projectsCounter();
-    showAllProjectCards('complete');
-  } else {
-    currentProjects.splice(this.dataset.index, 1);
-    sortProjects();
-    updateLocalStorage();
-    buildCurrentAndCompleteProjects();
-    projectsCounter();
-    showAllProjectCards('incomplete');
+  const confirmDeleteProjectDialog = document.querySelector('#confirm-delete-project');
+  confirmDeleteProjectDialog.showModal();
+  document.querySelector('.yes-button-delete-project').onclick = () => {
+    if(this.parentNode.parentNode.classList.contains('project-complete')) {
+      finishedProjects.splice(this.dataset.index, 1);
+      sortProjects();
+      updateLocalStorage();
+      buildCurrentAndCompleteProjects();
+      projectsCounter();
+      showAllProjectCards('complete');
+      confirmDeleteProjectDialog.close();
+    } else {
+      currentProjects.splice(this.dataset.index, 1);
+      sortProjects();
+      updateLocalStorage();
+      buildCurrentAndCompleteProjects();
+      projectsCounter();
+      showAllProjectCards('incomplete');
+      confirmDeleteProjectDialog.close();
+    }
+  }
+  document.querySelector('.no-button-delete-project').onclick = () => {
+    confirmDeleteProjectDialog.close();
   }
 }
 
@@ -179,9 +213,17 @@ export function taskCompleteButtonAction() {
 }
 
 export function taskDeleteButtonAction() {
-  currentProjects[this.dataset.project].tasks.splice(this.dataset.index, 1);
-  updateLocalStorage();
-  removeTaskCard(currentProjects[this.dataset.project].name, this.dataset.project);
+  const confirmDeleteTaskDialog = document.querySelector('#confirm-delete-task');
+  confirmDeleteTaskDialog.showModal();
+  document.querySelector('.yes-button-delete-task').onclick = () => {
+    currentProjects[this.dataset.project].tasks.splice(this.dataset.index, 1);
+    updateLocalStorage();
+    removeTaskCard(currentProjects[this.dataset.project].name, this.dataset.project);
+    confirmDeleteTaskDialog.close();
+  }
+  document.querySelector('.no-button-delete-task').onclick = () => {
+    confirmDeleteTaskDialog.close();
+  }
 }
 
 function updateLocalStorage() {

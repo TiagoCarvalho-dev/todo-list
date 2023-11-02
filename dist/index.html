@@ -37,7 +37,7 @@
   </footer>
 
   <dialog id="new-project-dialog">
-    <form method="dialog">
+    <form method="dialog" class="new-project-form">
       <div class="project-name-container">
         <label for="project-name">Project Name</label>
         <input type="text" name="project-name" id="project-name">
@@ -61,7 +61,7 @@
   </dialog>
 
   <dialog id="new-task-dialog">
-    <form method="dialog">
+    <form method="dialog" class="new-task-form">
       <div class="chosen-project-container">
         <p>Project: </p>
         <p class="chosen-project"></p>
@@ -94,6 +94,45 @@
         <button class="create-task-button">Create</button>
       </div>
     </form>
+  </dialog>
+
+  <dialog id="confirm-delete-project">
+    <p class="confirmation">Are you sure you want to delete this project?</p>
+    <div class="buttons">
+      <button class="no-button-delete-project">NO</button>
+      <button class="yes-button-delete-project">YES</button>
+    </div>
+  </dialog>
+
+  <dialog id="confirm-delete-task">
+    <p class="confirmation">Are you sure you want to delete this task?</p>
+    <div class="buttons">
+      <button class="no-button-delete-task">NO</button>
+      <button class="yes-button-delete-task">YES</button>
+    </div>
+  </dialog>
+
+  <dialog id="confirm-complete-project">
+    <p class="confirmation">Are you sure you want to mark this project as complete?</p>
+    <div class="buttons">
+      <button class="no-button-complete-project">NO</button>
+      <button class="yes-button-complete-project">YES</button>
+    </div>
+  </dialog>
+
+  <dialog id="confirm-incomplete-project">
+    <p class="confirmation">Are you sure you want to mark this project as incomplete?</p>
+    <div class="buttons">
+      <button class="no-button-incomplete-project">NO</button>
+      <button class="yes-button-incomplete-project">YES</button>
+    </div>
+  </dialog>
+
+  <dialog id="complete-all-tasks-alert">
+    <p class="confirmation">Complete all tasks before completing a project</p>
+    <div class="buttons">
+      <button class="ok-button-tasks-alert">OK</button>
+    </div>
   </dialog>
 </body>
 </html>
