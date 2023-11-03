@@ -1,10 +1,11 @@
 import "./normalize.css";
 import "./style.css";
-import { format, parseISO, formatDistanceToNow } from "date-fns";
+import { isEqual, sub } from "date-fns";
 import { createTasksSubCards, showAllProjectCards, buildCurrentAndCompleteProjects, 
          toggleTaskCompleteClass, removeTaskCard, projectsCounter, 
          toggleProjectCompleteClass, addCompleteProjectsButtonEvent, createCurrentProjectNewTaskButton, 
-         removeNewTaskButton, createTodayProjectCards, removeAllProjectCards, createTodayTasksSubCards } from "./DOMManipulation.js";
+         removeNewTaskButton, createTodayProjectCards, removeAllProjectCards, createTodayTasksSubCards, 
+         noProjectsAvailableText } from "./DOMManipulation.js";
 
 let currentProjects = [];
 let finishedProjects = [];
@@ -272,7 +273,7 @@ function filterTodayProjects() {
   const mainSectionProjects = [];
   for(let i = 0; i < currentProjects.length; i++) {
     for(let j = 0; j < currentProjects[i].tasks.length; j++) {
-      if(currentProjects[i].tasks[j].date.toLocaleDateString() === new Date().toLocaleDateString()) {
+      if(isEqual(currentProjects[i].tasks[j].date.getTime(), new Date().setHours(0, 0, 0, 0))) {
         const filteredProject = mainSectionProjects.filter(project => project.name === currentProjects[i].name);
         if(filteredProject.length > 0) {
           createTodayTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
@@ -288,6 +289,39 @@ function filterTodayProjects() {
         }
       }
     }
+  }
+  if(!document.querySelector('.main-section').firstChild) {
+    noProjectsAvailableText();
+  }
+}
+
+document.querySelector('.next-seven-days-button').addEventListener('click', filterNextSevenDaysProjects);
+
+function filterNextSevenDaysProjects() {
+  removeAllProjectCards();
+  const mainSectionProjects = [];
+  for(let i = 0; i < currentProjects.length; i++) {
+    for(let j = 0; j < currentProjects[i].tasks.length; j++) {
+      if((currentProjects[i].tasks[j].date.getTime() - new Date().setHours(0, 0, 0, 0)) < 518400001 &&
+         (currentProjects[i].tasks[j].date.getTime() - new Date().setHours(0, 0, 0, 0)) > 0) {
+        const filteredProject = mainSectionProjects.filter(project => project.name === currentProjects[i].name);
+        if(filteredProject.length > 0) {
+          createTodayTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
+                                   currentProjects[i].tasks[j].priority, i, j, 'incomplete');
+          removeNewTaskButton(i);
+          createCurrentProjectNewTaskButton(currentProjects[i].name, i);
+        } else {
+          createTodayProjectCards(currentProjects[i].name, currentProjects[i].priority, i, 'incomplete');
+          createTodayTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
+                                   currentProjects[i].tasks[j].priority, i, j, 'incomplete');
+          createCurrentProjectNewTaskButton(currentProjects[i].name, i);
+          mainSectionProjects.push(currentProjects[i]);
+        }
+      }
+    }
+  }
+  if(!document.querySelector('.main-section').firstChild) {
+    noProjectsAvailableText();
   }
 }
 

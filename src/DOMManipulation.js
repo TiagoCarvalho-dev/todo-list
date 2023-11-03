@@ -1,4 +1,3 @@
-import { format, parseISO } from "date-fns";
 import { getCurrentProjects, getFinishedProjects, projectCompleteButtonAction, 
          projectDeleteButtonAction, taskCompleteButtonAction, taskDeleteButtonAction } from "./index.js";
 
@@ -97,6 +96,10 @@ export function createTasksSubCards(name, date, time, priority, project, index, 
       taskDiv.classList.add('task-complete');
     }
 
+    if((date.getTime() - new Date().setHours(0, 0, 0, 0)) < 0) {
+      taskDiv.classList.add('late-task');
+    }
+
     const nameDiv = document.createElement('div');
 
     const taskName = document.createElement('h4');
@@ -156,7 +159,7 @@ export function removeTaskCard(projectName, projectIndex) {
   createCurrentProjectNewTaskButton(projectName, projectIndex);
 }
 
-function noProjectsAvailableText() {
+export function noProjectsAvailableText() {
   const noProjectsAvailable = document.createElement('h2');
   noProjectsAvailable.classList.add('no-projects-main-page');
   noProjectsAvailable.textContent = 'NO PROJECTS AVAILABLE';

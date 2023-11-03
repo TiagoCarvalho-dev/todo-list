@@ -82,6 +82,10 @@ footer {
   background-color: green;
 }
 
+.late-task {
+  background-color: yellow;
+}
+
 * {
   border: solid 1px red;
 }
