@@ -58,34 +58,35 @@ document.querySelector('.create-project-button').addEventListener('click', () =>
 });
 
 function createNewProjectButtonEvent() {
-    if(!document.querySelector('#project-name').value) {
-      const fillAllProjectInformationDialog = document.querySelector('#fill-all-project-information-alert');
-      fillAllProjectInformationDialog.showModal();
-      document.querySelector('.ok-button-project-information-alert').onclick = () => {
-        fillAllProjectInformationDialog.close();
+  const fillAllProjectInformationDialog = document.querySelector('#fill-all-project-information-alert');
+  const existingProjectNameDialog = document.querySelector('#existing-name-alert');
+
+  if(!document.querySelector('#project-name').value) {
+    fillAllProjectInformationDialog.showModal();
+    document.querySelector('.ok-button-project-information-alert').onclick = () => {
+      fillAllProjectInformationDialog.close();
+    }
+    return
+  }
+
+  for(let i = 0; i < currentProjects.length; i++) {
+    if(document.querySelector('#project-name').value.toLowerCase() === currentProjects[i].name.toLowerCase()) {
+      existingProjectNameDialog.showModal();
+      document.querySelector('.ok-button-existing-name').onclick = () => {
+        existingProjectNameDialog.close();
       }
       return
     }
+  }
 
-    for(let i = 0; i < currentProjects.length; i++) {
-      if(document.querySelector('#project-name').value.toLowerCase() === currentProjects[i].name.toLowerCase()) {
-        const existingProjectNameDialog = document.querySelector('#existing-name-alert');
-        existingProjectNameDialog.showModal();
-        document.querySelector('.ok-button-existing-name').onclick = () => {
-          existingProjectNameDialog.close();
-        }
-      return
-      }
-    }
-
-    let newProject;
-    newProject = new Project(document.querySelector('#project-name').value, document.querySelector('input[name="priority-project"]:checked').value);
-    currentProjects.push(newProject);
-    sortProjects();
-    updateLocalStorage();
-    showAllProjectCards('incomplete');
-    buildCurrentAndCompleteProjects();
-    projectsCounter();
+  let newProject;
+  newProject = new Project(document.querySelector('#project-name').value, document.querySelector('input[name="priority-project"]:checked').value);
+  currentProjects.push(newProject);
+  sortProjects();
+  updateLocalStorage();
+  showAllProjectCards('incomplete');
+  buildCurrentAndCompleteProjects();
+  projectsCounter();
 }
 
 document.querySelector('.cancel-task-button').addEventListener('click', () => {
@@ -99,26 +100,27 @@ document.querySelector('.create-task-button').addEventListener('click', () => {
 });
 
 function createNewTaskButtonEvent() {
-    if(!document.querySelector('#task-name').value ||
-       !document.querySelector('#task-date').value ||
-       !document.querySelector('#task-time').value) {
-      const fillAllTaskInformationDialog = document.querySelector('#fill-all-task-information-alert');
-      fillAllTaskInformationDialog.showModal();
-      document.querySelector('.ok-button-task-information-alert').onclick = () => {
-        fillAllTaskInformationDialog.close();
-      }
-      return
-    }
+  const fillAllTaskInformationDialog = document.querySelector('#fill-all-task-information-alert');
 
-    let newTask;
-    newTask = new Task(document.querySelector('#task-name').value, new Date(new Date(document.querySelector('#task-date').value).getTime() - new Date(document.querySelector('#task-date').value).getTimezoneOffset() * -60000), 
-                       document.querySelector('#task-time').value, document.querySelector('input[name="priority-task"]:checked').value);
-    currentProjects[document.querySelector('.chosen-project').dataset.index].tasks.push(newTask);
-    updateLocalStorage();
-    createTasksSubCards(newTask.name, newTask.date, newTask.time, newTask.priority, document.querySelector('.chosen-project').dataset.index, 
-                        currentProjects[document.querySelector('.chosen-project').dataset.index].tasks.length - 1, 'incomplete');
-    removeNewTaskButton(document.querySelector('.chosen-project').dataset.index);
-    createCurrentProjectNewTaskButton(currentProjects[document.querySelector('.chosen-project').dataset.index].name, document.querySelector('.chosen-project').dataset.index);
+  if(!document.querySelector('#task-name').value ||
+     !document.querySelector('#task-date').value ||
+     !document.querySelector('#task-time').value) {
+    fillAllTaskInformationDialog.showModal();
+    document.querySelector('.ok-button-task-information-alert').onclick = () => {
+      fillAllTaskInformationDialog.close();
+    }
+    return
+  }
+
+  let newTask;
+  newTask = new Task(document.querySelector('#task-name').value, fixDateAccuracy('#task-date'), 
+                      document.querySelector('#task-time').value, document.querySelector('input[name="priority-task"]:checked').value);
+  currentProjects[document.querySelector('.chosen-project').dataset.index].tasks.push(newTask);
+  updateLocalStorage();
+  createTasksSubCards(newTask.name, newTask.date, newTask.time, newTask.priority, document.querySelector('.chosen-project').dataset.index, 
+                      currentProjects[document.querySelector('.chosen-project').dataset.index].tasks.length - 1, 'incomplete');
+  removeNewTaskButton(document.querySelector('.chosen-project').dataset.index);
+  createCurrentProjectNewTaskButton(currentProjects[document.querySelector('.chosen-project').dataset.index].name, document.querySelector('.chosen-project').dataset.index);
 }
 
 document.querySelector('.all-complete-button').addEventListener('click', () => {
@@ -160,24 +162,25 @@ export function projectCompleteButtonAction() {
     document.querySelector('.no-button-incomplete-project').onclick = () => {
       confirmIncompleteProjectDialog.close();
     }
-  } else {
-    confirmCompleteProjectDialog.showModal();
-    document.querySelector('.yes-button-complete-project').onclick = () => {
-      currentProjects[this.dataset.index].complete = true;
-      toggleProjectCompleteClass(this.dataset.index, 'add');
-      finishedProjects.push(currentProjects[this.dataset.index]);
-      currentProjects.splice(this.dataset.index, 1);
-      sortProjects();
-      updateLocalStorage();
-      addCompleteProjectsButtonEvent();
-      buildCurrentAndCompleteProjects();
-      projectsCounter();
-      showAllProjectCards('incomplete');
-      confirmCompleteProjectDialog.close();
-    }
-    document.querySelector('.no-button-complete-project').onclick = () => {
-      confirmCompleteProjectDialog.close();
-    }
+    return
+  }
+
+  confirmCompleteProjectDialog.showModal();
+  document.querySelector('.yes-button-complete-project').onclick = () => {
+    currentProjects[this.dataset.index].complete = true;
+    toggleProjectCompleteClass(this.dataset.index, 'add');
+    finishedProjects.push(currentProjects[this.dataset.index]);
+    currentProjects.splice(this.dataset.index, 1);
+    sortProjects();
+    updateLocalStorage();
+    addCompleteProjectsButtonEvent();
+    buildCurrentAndCompleteProjects();
+    projectsCounter();
+    showAllProjectCards('incomplete');
+    confirmCompleteProjectDialog.close();
+  }
+  document.querySelector('.no-button-complete-project').onclick = () => {
+    confirmCompleteProjectDialog.close();
   }
 }
 
@@ -193,15 +196,15 @@ export function projectDeleteButtonAction() {
       projectsCounter();
       showAllProjectCards('complete');
       confirmDeleteProjectDialog.close();
-    } else {
-      currentProjects.splice(this.dataset.index, 1);
-      sortProjects();
-      updateLocalStorage();
-      buildCurrentAndCompleteProjects();
-      projectsCounter();
-      showAllProjectCards('incomplete');
-      confirmDeleteProjectDialog.close();
+      return
     }
+    currentProjects.splice(this.dataset.index, 1);
+    sortProjects();
+    updateLocalStorage();
+    buildCurrentAndCompleteProjects();
+    projectsCounter();
+    showAllProjectCards('incomplete');
+    confirmDeleteProjectDialog.close();
   }
   document.querySelector('.no-button-delete-project').onclick = () => {
     confirmDeleteProjectDialog.close();
@@ -223,17 +226,17 @@ export function taskCompleteButtonAction() {
     document.querySelector('.no-button-incomplete-task').onclick = () => {
       confirmTaskIncompleteDialog.close();
     }
-  } else {
-    confirmTaskCompleteDialog.showModal();
-    document.querySelector('.yes-button-complete-task').onclick = () => {
-      currentProjects[this.dataset.project].tasks[this.dataset.index].complete = true;
-      updateLocalStorage();
-      toggleTaskCompleteClass(this.dataset.project, this.dataset.index, 'add');
-      confirmTaskCompleteDialog.close();
-    }
-    document.querySelector('.no-button-complete-task').onclick = () => {
-      confirmTaskCompleteDialog.close();
-    }
+    return
+  }
+  confirmTaskCompleteDialog.showModal();
+  document.querySelector('.yes-button-complete-task').onclick = () => {
+    currentProjects[this.dataset.project].tasks[this.dataset.index].complete = true;
+    updateLocalStorage();
+    toggleTaskCompleteClass(this.dataset.project, this.dataset.index, 'add');
+    confirmTaskCompleteDialog.close();
+  }
+  document.querySelector('.no-button-complete-task').onclick = () => {
+    confirmTaskCompleteDialog.close();
   }
 }
 
@@ -258,21 +261,21 @@ function filterTodayProjects() {
   const mainSectionProjects = [];
   for(let i = 0; i < currentProjects.length; i++) {
     for(let j = 0; j < currentProjects[i].tasks.length; j++) {
-      if(currentProjects[i].tasks[j].date.getTime() === new Date().setHours(0, 0, 0, 0)) {
-        const filteredProject = mainSectionProjects.filter(project => project.name === currentProjects[i].name);
-        if(filteredProject.length > 0) {
-          createFilteredTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
-                                      currentProjects[i].tasks[j].priority, i, j, 'incomplete');
-          removeNewTaskButton(i);
-          createCurrentProjectNewTaskButton(currentProjects[i].name, i);
-        } else {
-          createFilteredProjectCards(currentProjects[i].name, currentProjects[i].priority, i, 'incomplete');
-          createFilteredTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
-                                      currentProjects[i].tasks[j].priority, i, j, 'incomplete');
-          createCurrentProjectNewTaskButton(currentProjects[i].name, i);
-          mainSectionProjects.push(currentProjects[i]);
-        }
+      if(currentProjects[i].tasks[j].date.getTime() !== new Date().setHours(0, 0, 0, 0)) continue
+
+      const filteredProject = mainSectionProjects.filter(project => project.name === currentProjects[i].name);
+      if(filteredProject.length > 0) {
+        createFilteredTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
+                                    currentProjects[i].tasks[j].priority, i, j, 'incomplete');
+        removeNewTaskButton(i);
+        createCurrentProjectNewTaskButton(currentProjects[i].name, i);
+        continue
       }
+      createFilteredProjectCards(currentProjects[i].name, currentProjects[i].priority, i, 'incomplete');
+      createFilteredTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
+                                  currentProjects[i].tasks[j].priority, i, j, 'incomplete');
+      createCurrentProjectNewTaskButton(currentProjects[i].name, i);
+      mainSectionProjects.push(currentProjects[i]);
     }
   }
   if(!document.querySelector('.main-section').firstChild) {
@@ -287,22 +290,22 @@ function filterNextSevenDaysProjects() {
   const mainSectionProjects = [];
   for(let i = 0; i < currentProjects.length; i++) {
     for(let j = 0; j < currentProjects[i].tasks.length; j++) {
-      if((currentProjects[i].tasks[j].date.getTime() - new Date().setHours(0, 0, 0, 0)) < 518400001 &&
-         (currentProjects[i].tasks[j].date.getTime() - new Date().setHours(0, 0, 0, 0)) >= 0) {
-        const filteredProject = mainSectionProjects.filter(project => project.name === currentProjects[i].name);
-        if(filteredProject.length > 0) {
-          createFilteredTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
-                                      currentProjects[i].tasks[j].priority, i, j, 'incomplete');
-          removeNewTaskButton(i);
-          createCurrentProjectNewTaskButton(currentProjects[i].name, i);
-        } else {
-          createFilteredProjectCards(currentProjects[i].name, currentProjects[i].priority, i, 'incomplete');
-          createFilteredTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
-                                      currentProjects[i].tasks[j].priority, i, j, 'incomplete');
-          createCurrentProjectNewTaskButton(currentProjects[i].name, i);
-          mainSectionProjects.push(currentProjects[i]);
-        }
+      if((currentProjects[i].tasks[j].date.getTime() - new Date().setHours(0, 0, 0, 0)) > 518400000 ||
+         (currentProjects[i].tasks[j].date.getTime() - new Date().setHours(0, 0, 0, 0)) < 0) continue
+
+      const filteredProject = mainSectionProjects.filter(project => project.name === currentProjects[i].name);
+      if(filteredProject.length > 0) {
+        createFilteredTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
+                                    currentProjects[i].tasks[j].priority, i, j, 'incomplete');
+        removeNewTaskButton(i);
+        createCurrentProjectNewTaskButton(currentProjects[i].name, i);
+        continue
       }
+      createFilteredProjectCards(currentProjects[i].name, currentProjects[i].priority, i, 'incomplete');
+      createFilteredTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
+                                  currentProjects[i].tasks[j].priority, i, j, 'incomplete');
+      createCurrentProjectNewTaskButton(currentProjects[i].name, i);
+      mainSectionProjects.push(currentProjects[i]);
     }
   }
   if(!document.querySelector('.main-section').firstChild) {
@@ -311,20 +314,20 @@ function filterNextSevenDaysProjects() {
 }
 
 document.querySelector('.filters-button').addEventListener('click', () => {
+  const selectedFilter = document.querySelector('#selected-filter');
+  const dateContainer = document.querySelector('.date-container');
+  const priorityContainer = document.querySelector('.priority-container');
+
   document.querySelector('.filters-container').classList.toggle('hidden');
-  if(document.querySelector('#selected-filter').value === 'date') {
-    document.querySelector('.date-container').classList.remove('hidden');
-  } else {
-    document.querySelector('.priority-container').classList.remove('hidden');
-  }
-  document.querySelector('#selected-filter').addEventListener('change', () => {
-    if(document.querySelector('#selected-filter').value === 'date') {
-      document.querySelector('.date-container').classList.remove('hidden');
-      document.querySelector('.priority-container').classList.add('hidden');
-    } else {
-      document.querySelector('.date-container').classList.add('hidden');
-      document.querySelector('.priority-container').classList.remove('hidden');
+
+  selectedFilter.addEventListener('change', () => {
+    if(selectedFilter.value === 'date') {
+      dateContainer.classList.remove('hidden');
+      priorityContainer.classList.add('hidden');
+      return
     }
+    dateContainer.classList.add('hidden');
+    priorityContainer.classList.remove('hidden');
   });
 });
 
@@ -335,22 +338,21 @@ function confirmDateButtonEvent() {
   const mainSectionProjects = [];
   for(let i = 0; i < currentProjects.length; i++) {
     for(let j = 0; j < currentProjects[i].tasks.length; j++) {
-      if(currentProjects[i].tasks[j].date.getTime() === 
-         new Date(new Date(document.querySelector('#selected-date').value).getTime() - new Date(document.querySelector('#selected-date').value).getTimezoneOffset() * -60000).getTime()) {
-        const filteredProject = mainSectionProjects.filter(project => project.name === currentProjects[i].name);
-        if(filteredProject.length > 0) {
-          createFilteredTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
-                                      currentProjects[i].tasks[j].priority, i, j, 'incomplete');
-          removeNewTaskButton(i);
-          createCurrentProjectNewTaskButton(currentProjects[i].name, i);
-        } else {
-          createFilteredProjectCards(currentProjects[i].name, currentProjects[i].priority, i, 'incomplete');
-          createFilteredTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
-                                      currentProjects[i].tasks[j].priority, i, j, 'incomplete');
-          createCurrentProjectNewTaskButton(currentProjects[i].name, i);
-          mainSectionProjects.push(currentProjects[i]);
-        }
+      if(currentProjects[i].tasks[j].date.getTime() !== fixDateAccuracy('#selected-date').getTime()) continue
+
+      const filteredProject = mainSectionProjects.filter(project => project.name === currentProjects[i].name);
+      if(filteredProject.length > 0) {
+        createFilteredTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
+                                    currentProjects[i].tasks[j].priority, i, j, 'incomplete');
+        removeNewTaskButton(i);
+        createCurrentProjectNewTaskButton(currentProjects[i].name, i);
+        continue
       }
+      createFilteredProjectCards(currentProjects[i].name, currentProjects[i].priority, i, 'incomplete');
+      createFilteredTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
+                                  currentProjects[i].tasks[j].priority, i, j, 'incomplete');
+      createCurrentProjectNewTaskButton(currentProjects[i].name, i);
+      mainSectionProjects.push(currentProjects[i]);
     }
   }
   if(!document.querySelector('.main-section').firstChild) {
@@ -365,21 +367,21 @@ function confirmPriorityButtonEvent() {
   const mainSectionProjects = [];
   for(let i = 0; i < currentProjects.length; i++) {
     for(let j = 0; j < currentProjects[i].tasks.length; j++) {
-      if(currentProjects[i].tasks[j].priority === document.querySelector('input[name="priority-filter"]:checked').value) {
-        const filteredProject = mainSectionProjects.filter(project => project.name === currentProjects[i].name);
-        if(filteredProject.length > 0) {
-          createFilteredTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
-                                      currentProjects[i].tasks[j].priority, i, j, 'incomplete');
-          removeNewTaskButton(i);
-          createCurrentProjectNewTaskButton(currentProjects[i].name, i);
-        } else {
-          createFilteredProjectCards(currentProjects[i].name, currentProjects[i].priority, i, 'incomplete');
-          createFilteredTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
-                                      currentProjects[i].tasks[j].priority, i, j, 'incomplete');
-          createCurrentProjectNewTaskButton(currentProjects[i].name, i);
-          mainSectionProjects.push(currentProjects[i]);
-        }
+      if(currentProjects[i].tasks[j].priority !== document.querySelector('input[name="priority-filter"]:checked').value) continue
+
+      const filteredProject = mainSectionProjects.filter(project => project.name === currentProjects[i].name);
+      if(filteredProject.length > 0) {
+        createFilteredTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
+                                    currentProjects[i].tasks[j].priority, i, j, 'incomplete');
+        removeNewTaskButton(i);
+        createCurrentProjectNewTaskButton(currentProjects[i].name, i);
+        continue
       }
+      createFilteredProjectCards(currentProjects[i].name, currentProjects[i].priority, i, 'incomplete');
+      createFilteredTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
+                                  currentProjects[i].tasks[j].priority, i, j, 'incomplete');
+      createCurrentProjectNewTaskButton(currentProjects[i].name, i);
+      mainSectionProjects.push(currentProjects[i]);
     }
   }
   if(!document.querySelector('.main-section').firstChild) {
@@ -394,6 +396,10 @@ export function convertTimeToMilliseconds(time) {
   return (hoursToSeconds + minutesToSeconds) * 1000;
 }
 
+function fixDateAccuracy(desiredSelector) {
+  return new Date(new Date(document.querySelector(desiredSelector).value).getTime() - new Date(document.querySelector(desiredSelector).value).getTimezoneOffset() * -60000);
+}
+
 function updateLocalStorage() {
   localStorage.setItem('currentProjects', JSON.stringify(currentProjects));
   localStorage.setItem('finishedProjects', JSON.stringify(finishedProjects));
@@ -405,18 +411,17 @@ function openingPage() {
     finishedProjects = JSON.parse(localStorage.getItem('finishedProjects'));
     for(let i = 0; i < currentProjects.length; i++) {
       for(let j = 0; j < currentProjects[i].tasks.length; j++) {
-        console.log(currentProjects[i].tasks[j].date);
         currentProjects[i].tasks[j].date = new Date(currentProjects[i].tasks[j].date);
       }
     }
     filterTodayProjects();
     buildCurrentAndCompleteProjects();
     projectsCounter();
-  } else {
-    filterTodayProjects();
-    buildCurrentAndCompleteProjects();
-    projectsCounter();
+    return
   }
+  filterTodayProjects();
+  buildCurrentAndCompleteProjects();
+  projectsCounter();
 }
 
 openingPage();
