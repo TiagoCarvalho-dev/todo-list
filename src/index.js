@@ -375,11 +375,7 @@ function openingPage() {
   if(localStorage.getItem('currentProjects')) {
     currentProjects = JSON.parse(localStorage.getItem('currentProjects'));
     finishedProjects = JSON.parse(localStorage.getItem('finishedProjects'));
-    for(let i = 0; i < currentProjects.length; i++) {
-      for(let j = 0; j < currentProjects[i].tasks.length; j++) {
-        currentProjects[i].tasks[j].date = new Date(currentProjects[i].tasks[j].date);
-      }
-    }
+    convertStringDateToDate();
     filterTodayProjects();
     buildCurrentAndCompleteProjects();
     projectsCounter();
@@ -388,6 +384,19 @@ function openingPage() {
   filterTodayProjects();
   buildCurrentAndCompleteProjects();
   projectsCounter();
+}
+
+function convertStringDateToDate() {
+  for(let i = 0; i < currentProjects.length; i++) {
+    for(let j = 0; j < currentProjects[i].tasks.length; j++) {
+      currentProjects[i].tasks[j].date = new Date(currentProjects[i].tasks[j].date);
+    }
+  }
+  for(let k = 0; k < finishedProjects.length; k++) {
+    for(let l = 0; l < finishedProjects[k].tasks.length; l++) {
+      finishedProjects[k].tasks[l].date = new Date(finishedProjects[k].tasks[l].date);
+    }
+  }
 }
 
 document.querySelector('.new-project-button').addEventListener('click', () => {
