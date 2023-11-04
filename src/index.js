@@ -1,6 +1,5 @@
 import "./normalize.css";
 import "./style.css";
-import { isEqual, sub } from "date-fns";
 import { createTasksSubCards, showAllProjectCards, buildCurrentAndCompleteProjects, 
          toggleTaskCompleteClass, removeTaskCard, projectsCounter, 
          toggleProjectCompleteClass, addCompleteProjectsButtonEvent, createCurrentProjectNewTaskButton, 
@@ -273,7 +272,7 @@ function filterTodayProjects() {
   const mainSectionProjects = [];
   for(let i = 0; i < currentProjects.length; i++) {
     for(let j = 0; j < currentProjects[i].tasks.length; j++) {
-      if(isEqual(currentProjects[i].tasks[j].date.getTime(), new Date().setHours(0, 0, 0, 0))) {
+      if(currentProjects[i].tasks[j].date.getTime() === new Date().setHours(0, 0, 0, 0)) {
         const filteredProject = mainSectionProjects.filter(project => project.name === currentProjects[i].name);
         if(filteredProject.length > 0) {
           createTodayTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
@@ -303,7 +302,7 @@ function filterNextSevenDaysProjects() {
   for(let i = 0; i < currentProjects.length; i++) {
     for(let j = 0; j < currentProjects[i].tasks.length; j++) {
       if((currentProjects[i].tasks[j].date.getTime() - new Date().setHours(0, 0, 0, 0)) < 518400001 &&
-         (currentProjects[i].tasks[j].date.getTime() - new Date().setHours(0, 0, 0, 0)) > 0) {
+         (currentProjects[i].tasks[j].date.getTime() - new Date().setHours(0, 0, 0, 0)) >= 0) {
         const filteredProject = mainSectionProjects.filter(project => project.name === currentProjects[i].name);
         if(filteredProject.length > 0) {
           createTodayTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
@@ -323,6 +322,13 @@ function filterNextSevenDaysProjects() {
   if(!document.querySelector('.main-section').firstChild) {
     noProjectsAvailableText();
   }
+}
+
+export function convertTimeToMilliseconds(time) {
+  let splitTime = time.split(':');
+  let hoursToSeconds = splitTime[0] * 3600;
+  let minutesToSeconds = splitTime[1] * 60;
+  return (hoursToSeconds + minutesToSeconds) * 1000;
 }
 
 function updateLocalStorage() {

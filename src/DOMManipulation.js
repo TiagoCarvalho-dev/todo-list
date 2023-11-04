@@ -1,4 +1,4 @@
-import { getCurrentProjects, getFinishedProjects, projectCompleteButtonAction, 
+import { convertTimeToMilliseconds, getCurrentProjects, getFinishedProjects, projectCompleteButtonAction, 
          projectDeleteButtonAction, taskCompleteButtonAction, taskDeleteButtonAction } from "./index.js";
 
 function createNewTaskButton() {
@@ -96,7 +96,7 @@ export function createTasksSubCards(name, date, time, priority, project, index, 
       taskDiv.classList.add('task-complete');
     }
 
-    if((date.getTime() - new Date().setHours(0, 0, 0, 0)) < 0) {
+    if(((date.getTime() + convertTimeToMilliseconds(time)) - new Date().getTime()) < 0) {
       taskDiv.classList.add('late-task');
     }
 
