@@ -3,8 +3,8 @@ import "./style.css";
 import { createTasksSubCards, showAllProjectCards, buildCurrentAndCompleteProjects, 
          toggleTaskCompleteClass, removeTaskCard, projectsCounter, toggleProjectCompleteClass, 
          addCompleteProjectsButtonEvent, createCurrentProjectNewTaskButton, removeNewTaskButton, 
-         createFilteredProjectCards, removeAllProjectCards, createFilteredTasksSubCards, 
-         noProjectsAvailableText, nothingToDoTodayText } from "./DOMManipulation.js";
+         removeAllProjectCards, noProjectsAvailableText, nothingToDoTodayText, addCompleteProjectButtonEvent,
+         addDeleteProjectButtonEvent} from "./DOMManipulation.js";
 
 let currentProjects = [];
 let finishedProjects = [];
@@ -229,14 +229,16 @@ function filterTodayProjects() {
 
       const filteredProject = mainSectionProjects.filter(project => project.name === currentProjects[i].name);
       if(filteredProject.length > 0) {
-        createFilteredTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
+        createTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
                                     currentProjects[i].tasks[j].priority, i, j, 'incomplete');
         removeNewTaskButton(i);
         createCurrentProjectNewTaskButton(currentProjects[i].name, i);
         continue
       }
-      createFilteredProjectCards(currentProjects[i].name, currentProjects[i].priority, i, 'incomplete');
-      createFilteredTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
+      createProjectCard(currentProjects[i].name, currentProjects[i].priority, i, 'incomplete');
+      addCompleteProjectButtonEvent(i);
+      addDeleteProjectButtonEvent(i);
+      createTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
                                   currentProjects[i].tasks[j].priority, i, j, 'incomplete');
       createCurrentProjectNewTaskButton(currentProjects[i].name, i);
       mainSectionProjects.push(currentProjects[i]);
@@ -257,14 +259,16 @@ function filterNextSevenDaysProjects() {
 
       const filteredProject = mainSectionProjects.filter(project => project.name === currentProjects[i].name);
       if(filteredProject.length > 0) {
-        createFilteredTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
+        createTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
                                     currentProjects[i].tasks[j].priority, i, j, 'incomplete');
         removeNewTaskButton(i);
         createCurrentProjectNewTaskButton(currentProjects[i].name, i);
         continue
       }
-      createFilteredProjectCards(currentProjects[i].name, currentProjects[i].priority, i, 'incomplete');
-      createFilteredTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
+      createProjectCard(currentProjects[i].name, currentProjects[i].priority, i, 'incomplete');
+      addCompleteProjectButtonEvent(i);
+      addDeleteProjectButtonEvent(i);
+      createTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
                                   currentProjects[i].tasks[j].priority, i, j, 'incomplete');
       createCurrentProjectNewTaskButton(currentProjects[i].name, i);
       mainSectionProjects.push(currentProjects[i]);
@@ -302,14 +306,16 @@ function confirmDateButtonEvent() {
 
       const filteredProject = mainSectionProjects.filter(project => project.name === currentProjects[i].name);
       if(filteredProject.length > 0) {
-        createFilteredTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
+        createTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
                                     currentProjects[i].tasks[j].priority, i, j, 'incomplete');
         removeNewTaskButton(i);
         createCurrentProjectNewTaskButton(currentProjects[i].name, i);
         continue
       }
-      createFilteredProjectCards(currentProjects[i].name, currentProjects[i].priority, i, 'incomplete');
-      createFilteredTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
+      createProjectCard(currentProjects[i].name, currentProjects[i].priority, i, 'incomplete');
+      addCompleteProjectButtonEvent(i);
+      addDeleteProjectButtonEvent(i);
+      createTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
                                   currentProjects[i].tasks[j].priority, i, j, 'incomplete');
       createCurrentProjectNewTaskButton(currentProjects[i].name, i);
       mainSectionProjects.push(currentProjects[i]);
@@ -329,14 +335,16 @@ function confirmPriorityButtonEvent() {
 
       const filteredProject = mainSectionProjects.filter(project => project.name === currentProjects[i].name);
       if(filteredProject.length > 0) {
-        createFilteredTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
+        createTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
                                     currentProjects[i].tasks[j].priority, i, j, 'incomplete');
         removeNewTaskButton(i);
         createCurrentProjectNewTaskButton(currentProjects[i].name, i);
         continue
       }
-      createFilteredProjectCards(currentProjects[i].name, currentProjects[i].priority, i, 'incomplete');
-      createFilteredTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
+      createProjectCard(currentProjects[i].name, currentProjects[i].priority, i, 'incomplete');
+      addCompleteProjectButtonEvent(i);
+      addDeleteProjectButtonEvent(i);
+      createTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
                                   currentProjects[i].tasks[j].priority, i, j, 'incomplete');
       createCurrentProjectNewTaskButton(currentProjects[i].name, i);
       mainSectionProjects.push(currentProjects[i]);

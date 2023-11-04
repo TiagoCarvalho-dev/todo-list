@@ -1,75 +1,38 @@
 import { convertTimeToMilliseconds, getCurrentProjects, getFinishedProjects, projectCompleteButtonAction, 
          projectDeleteButtonAction, taskCompleteButtonAction, taskDeleteButtonAction } from "./index.js";
 
-function createNewTaskButton() {
-  for(let i = 0; i < getCurrentProjects().length; i++) {
-  const taskSubCardsDiv = document.querySelector(`.project-card-${i} > .tasks-sub-cards`);
-  const newTaskButton = document.createElement('button');
-  newTaskButton.classList.add('new-task-button');
-  newTaskButton.textContent = 'NEW TASK';
-  newTaskButton.addEventListener('click', () => {
-    document.querySelector('#new-task-dialog').showModal();
-    document.querySelector('.chosen-project').textContent = getCurrentProjects()[i].name;
-    document.querySelector('.chosen-project').dataset.index = i;
-  });
-
-  taskSubCardsDiv.appendChild(newTaskButton);
-  }
-}
-
-export function createCurrentProjectNewTaskButton(name, index) {
-  const taskSubCardsDiv = document.querySelector(`.project-card-${index} > .tasks-sub-cards`);
-  const newTaskButton = document.createElement('button');
-  newTaskButton.classList.add('new-task-button');
-  newTaskButton.textContent = 'NEW TASK';
-  newTaskButton.addEventListener('click', () => {
-    document.querySelector('#new-task-dialog').showModal();
-    document.querySelector('.chosen-project').textContent = name;
-    document.querySelector('.chosen-project').dataset.index = index;
-  });
-
-  taskSubCardsDiv.appendChild(newTaskButton);
-}
-
-export function removeNewTaskButton(index) {
-  const taskSubCardsDiv = document.querySelector(`.project-card-${index} > .tasks-sub-cards`);
-  taskSubCardsDiv.removeChild(taskSubCardsDiv.lastChild.previousSibling);
-}
-
-export function createProjectCard(name, priority, index, status) {
+export function createProjectCard(projectName, projectPriority, projectIndex, projectStatus) {
   if(document.querySelector('.main-section').firstChild === document.querySelector('.no-projects-main-page') ||
-     document.querySelector('.main-section').firstChild === document.querySelector('.nothing-to-do-today')) {
+      document.querySelector('.main-section').firstChild === document.querySelector('.nothing-to-do-today')) {
     removeAllProjectCards();
   }
 
   const projectCardDiv = document.createElement('div');
-  projectCardDiv.classList.add(`project-card-${index}`);
+  projectCardDiv.classList.add(`project-card-${projectIndex}`);
 
-  if(status !== 'incomplete') {
-    projectCardDiv.classList.add('project-complete');
-  }
+  if(projectStatus !== 'incomplete') projectCardDiv.classList.add('project-complete');
 
   const projectSubCardDiv = document.createElement('div');
   projectSubCardDiv.classList.add('project-sub-card');
 
-  const projectName = document.createElement('h3');
-  projectName.textContent = name;
+  const projectNameH3 = document.createElement('h3');
+  projectNameH3.textContent = projectName;
 
-  const projectPriority = document.createElement('p');
-  projectPriority.textContent = priority;
+  const projectPriorityP = document.createElement('p');
+  projectPriorityP.textContent = projectPriority;
 
   const completeProjectButton = document.createElement('button');
-  completeProjectButton.classList.add(`complete-project-button-${index}`);
-  completeProjectButton.dataset.index = index;
+  completeProjectButton.classList.add(`complete-project-button-${projectIndex}`);
+  completeProjectButton.dataset.index = projectIndex;
   completeProjectButton.textContent = 'DONE';
 
   const deleteProjectButton = document.createElement('button');
-  deleteProjectButton.classList.add(`delete-project-button-${index}`);
-  deleteProjectButton.dataset.index = index;
+  deleteProjectButton.classList.add(`delete-project-button-${projectIndex}`);
+  deleteProjectButton.dataset.index = projectIndex;
   deleteProjectButton.textContent = 'DELETE';
 
-  projectSubCardDiv.appendChild(projectName);
-  projectSubCardDiv.appendChild(projectPriority);
+  projectSubCardDiv.appendChild(projectNameH3);
+  projectSubCardDiv.appendChild(projectPriorityP);
   projectSubCardDiv.appendChild(completeProjectButton);
   projectSubCardDiv.appendChild(deleteProjectButton);
 
@@ -82,73 +45,74 @@ export function createProjectCard(name, priority, index, status) {
   document.querySelector('.main-section').appendChild(projectCardDiv);
 }
 
-export function createTasksSubCards(name, date, time, priority, project, index, status) {
-  if(!document.querySelector(`.project-card-${project}`)) {
-    return
-  } else {
-    const taskDiv = document.createElement('div');
-    taskDiv.classList.add(`task-${index}`);
-
-    if(status === 'incomplete') {
-      if(getCurrentProjects()[project].tasks[index].complete) {
-        taskDiv.classList.add('task-complete');
-      }
-    } else {
-      taskDiv.classList.add('task-complete');
-    }
-
-    if(((date.getTime() + convertTimeToMilliseconds(time)) - new Date().getTime()) < 0) {
-      taskDiv.classList.add('late-task');
-    }
-
-    const nameDiv = document.createElement('div');
-
-    const taskName = document.createElement('h4');
-    taskName.textContent = name;
-
-    nameDiv.appendChild(taskName);
-
-    if(status === 'incomplete') {
-      const completeTaskButton = document.createElement('button');
-      completeTaskButton.classList.add(`complete-task-button-${project}-${index}`);
-      completeTaskButton.dataset.project = project;
-      completeTaskButton.dataset.index = index;
-      completeTaskButton.textContent = 'DONE';
-  
-      completeTaskButton.addEventListener('click', addCompleteTaskButtonEvent);
-  
-      const deleteTaskButton = document.createElement('button');
-      deleteTaskButton.classList.add(`delete-task-button-${project}-${index}`);
-      deleteTaskButton.dataset.project = project;
-      deleteTaskButton.dataset.index = index;
-      deleteTaskButton.textContent = 'DELETE';
-  
-      deleteTaskButton.addEventListener('click', addDeleteTaskButtonEvent);
-  
-      nameDiv.appendChild(completeTaskButton);
-      nameDiv.appendChild(deleteTaskButton);
-    }
-    
-    const detailsDiv = document.createElement('div');
-
-    const taskDate = document.createElement('p');
-    taskDate.textContent = date.toLocaleDateString();
-
-    const taskTime = document.createElement('p');
-    taskTime.textContent = time;
-
-    const taskPriority = document.createElement('p');
-    taskPriority.textContent = priority;
-
-    detailsDiv.appendChild(taskDate);
-    detailsDiv.appendChild(taskTime);
-    detailsDiv.appendChild(taskPriority);
-
-    taskDiv.appendChild(nameDiv);
-    taskDiv.appendChild(detailsDiv);
-
-    document.querySelector(`.project-card-${project} > .tasks-sub-cards`).appendChild(taskDiv);
+export function removeAllProjectCards() {
+  const mainDiv = document.querySelector('.main-section');
+  while(mainDiv.firstChild) {
+    mainDiv.removeChild(mainDiv.lastChild);
   }
+}
+
+export function createTasksSubCards(taskName, taskDate, taskTime, taskPriority, projectIndex, taskIndex, projectStatus) {
+  if(!document.querySelector(`.project-card-${projectIndex}`)) return
+
+  const taskDiv = document.createElement('div');
+  taskDiv.classList.add(`task-${taskIndex}`);
+
+  if((projectStatus === 'incomplete' && getCurrentProjects()[projectIndex].tasks[taskIndex].complete) || projectStatus === 'complete') {
+    taskDiv.classList.add('task-complete');
+  }
+
+  if(((taskDate.getTime() + convertTimeToMilliseconds(taskTime)) - new Date().getTime()) < 0) {
+    taskDiv.classList.add('late-task');
+  }
+
+  const nameDiv = document.createElement('div');
+
+  const taskNameH4 = document.createElement('h4');
+  taskNameH4.textContent = taskName;
+
+  nameDiv.appendChild(taskNameH4);
+
+  if(projectStatus === 'incomplete') {
+    const completeTaskButton = document.createElement('button');
+    completeTaskButton.classList.add(`complete-task-button-${projectIndex}-${taskIndex}`);
+    completeTaskButton.dataset.project = projectIndex;
+    completeTaskButton.dataset.index = taskIndex;
+    completeTaskButton.textContent = 'DONE';
+
+    completeTaskButton.addEventListener('click', addCompleteTaskButtonEvent);
+
+    const deleteTaskButton = document.createElement('button');
+    deleteTaskButton.classList.add(`delete-task-button-${projectIndex}-${taskIndex}`);
+    deleteTaskButton.dataset.project = projectIndex;
+    deleteTaskButton.dataset.index = taskIndex;
+    deleteTaskButton.textContent = 'DELETE';
+
+    deleteTaskButton.addEventListener('click', addDeleteTaskButtonEvent);
+
+    nameDiv.appendChild(completeTaskButton);
+    nameDiv.appendChild(deleteTaskButton);
+  }
+  
+  const detailsDiv = document.createElement('div');
+
+  const taskDateP = document.createElement('p');
+  taskDateP.textContent = taskDate.toLocaleDateString();
+
+  const taskTimeP = document.createElement('p');
+  taskTimeP.textContent = taskTime;
+
+  const taskPriorityP = document.createElement('p');
+  taskPriorityP.textContent = taskPriority;
+
+  detailsDiv.appendChild(taskDateP);
+  detailsDiv.appendChild(taskTimeP);
+  detailsDiv.appendChild(taskPriorityP);
+
+  taskDiv.appendChild(nameDiv);
+  taskDiv.appendChild(detailsDiv);
+
+  document.querySelector(`.project-card-${projectIndex} > .tasks-sub-cards`).appendChild(taskDiv);
 }
 
 export function removeTaskCard(projectName, projectIndex) {
@@ -160,20 +124,11 @@ export function removeTaskCard(projectName, projectIndex) {
   createCurrentProjectNewTaskButton(projectName, projectIndex);
 }
 
-export function noProjectsAvailableText() {
-  const noProjectsAvailable = document.createElement('h2');
-  noProjectsAvailable.classList.add('no-projects-main-page');
-  noProjectsAvailable.textContent = 'NO PROJECTS AVAILABLE';
-
-  document.querySelector('.main-section').appendChild(noProjectsAvailable);
-}
-
-export function nothingToDoTodayText() {
-  const noProjectsAvailable = document.createElement('h2');
-  noProjectsAvailable.classList.add('nothing-to-do-today');
-  noProjectsAvailable.textContent = 'NOTHING TO DO TODAY =)';
-
-  document.querySelector('.main-section').appendChild(noProjectsAvailable);
+function removeAllTasksCards(projectIndex) {
+  const taskSubCard = document.querySelector(`.project-card-${projectIndex} > .tasks-sub-cards`);
+  while(taskSubCard.firstChild) {
+    taskSubCard.removeChild(taskSubCard.lastChild);
+  }
 }
 
 export function buildCurrentAndCompleteProjects() {
@@ -216,47 +171,31 @@ function removeAllCurrentAndCompleteProjects() {
   }
 }
 
-export function removeAllProjectCards() {
-  const mainDiv = document.querySelector('.main-section');
-  while(mainDiv.firstChild) {
-    mainDiv.removeChild(mainDiv.lastChild);
-  }
-}
-
-function removeAllTasksCards(project) {
-  const taskSubCard = document.querySelector(`.project-card-${project} > .tasks-sub-cards`);
-  while(taskSubCard.firstChild) {
-    taskSubCard.removeChild(taskSubCard.lastChild);
-  }
-}
-
-export function showAllProjectCards(status) {
+export function showAllProjectCards(projectStatus) {
   removeAllProjectCards();
 
-  if(!document.querySelector('.main-section').firstChild) {
-    noProjectsAvailableText();
-  }
+  if(!document.querySelector('.main-section').firstChild) noProjectsAvailableText();
 
-  if(status === 'incomplete') {
+  if(projectStatus === 'incomplete') {
     for(let i = 0; i < getCurrentProjects().length; i++) {
-      createProjectCard(getCurrentProjects()[i].name, getCurrentProjects()[i].priority, i, status);
+      createProjectCard(getCurrentProjects()[i].name, getCurrentProjects()[i].priority, i, projectStatus);
       addCompleteProjectButtonEvent(i);
       addDeleteProjectButtonEvent(i);
       for(let j = 0; j < getCurrentProjects()[i].tasks.length; j++) {
         createTasksSubCards(getCurrentProjects()[i].tasks[j].name, getCurrentProjects()[i].tasks[j].date, 
-                            getCurrentProjects()[i].tasks[j].time, getCurrentProjects()[i].tasks[j].priority, i, j, status);
+                            getCurrentProjects()[i].tasks[j].time, getCurrentProjects()[i].tasks[j].priority, i, j, projectStatus);
       }
     }
     createNewTaskButton();
-  } else {
-    for(let i = 0; i < getFinishedProjects().length; i++) {
-      createProjectCard(getFinishedProjects()[i].name, getFinishedProjects()[i].priority, i, status);
-      addCompleteProjectButtonEvent(i);
-      addDeleteProjectButtonEvent(i);
-      for(let j = 0; j < getFinishedProjects()[i].tasks.length; j++) {
-        createTasksSubCards(getFinishedProjects()[i].tasks[j].name, getFinishedProjects()[i].tasks[j].date, 
-                            getFinishedProjects()[i].tasks[j].time, getFinishedProjects()[i].tasks[j].priority, i, j, status);
-      }
+    return
+  }
+  for(let i = 0; i < getFinishedProjects().length; i++) {
+    createProjectCard(getFinishedProjects()[i].name, getFinishedProjects()[i].priority, i, projectStatus);
+    addCompleteProjectButtonEvent(i);
+    addDeleteProjectButtonEvent(i);
+    for(let j = 0; j < getFinishedProjects()[i].tasks.length; j++) {
+      createTasksSubCards(getFinishedProjects()[i].tasks[j].name, getFinishedProjects()[i].tasks[j].date, 
+                          getFinishedProjects()[i].tasks[j].time, getFinishedProjects()[i].tasks[j].priority, i, j, projectStatus);
     }
   }
 }
@@ -288,29 +227,86 @@ function createCompleteProjectCard() {
   }
 }
 
-export function createFilteredProjectCards(projectName, projectPriority, projectIndex, status) {
-  createProjectCard(projectName, projectPriority, projectIndex, status);
-  addCompleteProjectButtonEvent(projectIndex);
-  addDeleteProjectButtonEvent(projectIndex);
+function createNewTaskButton() {
+  for(let i = 0; i < getCurrentProjects().length; i++) {
+  const taskSubCardsDiv = document.querySelector(`.project-card-${i} > .tasks-sub-cards`);
+  const newTaskButton = document.createElement('button');
+  newTaskButton.classList.add('new-task-button');
+  newTaskButton.textContent = 'NEW TASK';
+  newTaskButton.addEventListener('click', () => {
+    document.querySelector('#new-task-dialog').showModal();
+    document.querySelector('.chosen-project').textContent = getCurrentProjects()[i].name;
+    document.querySelector('.chosen-project').dataset.index = i;
+  });
+
+  taskSubCardsDiv.appendChild(newTaskButton);
+  }
 }
 
-export function createFilteredTasksSubCards(taskName, taskDate, taskTime, taskPriority, projectIndex, taskIndex, status) {
-  createTasksSubCards(taskName, taskDate, taskTime, taskPriority, projectIndex, taskIndex, status);
+export function createCurrentProjectNewTaskButton(projectName, projectIndex) {
+  const taskSubCardsDiv = document.querySelector(`.project-card-${projectIndex} > .tasks-sub-cards`);
+  const newTaskButton = document.createElement('button');
+  newTaskButton.classList.add('new-task-button');
+  newTaskButton.textContent = 'NEW TASK';
+  newTaskButton.addEventListener('click', () => {
+    document.querySelector('#new-task-dialog').showModal();
+    document.querySelector('.chosen-project').textContent = projectName;
+    document.querySelector('.chosen-project').dataset.index = projectIndex;
+  });
+
+  taskSubCardsDiv.appendChild(newTaskButton);
 }
 
-export function toggleTaskCompleteClass(project, index, operation) {
-  if(operation === 'add') return document.querySelector(`.project-card-${project} > .tasks-sub-cards > .task-${index}`).classList.add('task-complete');
-  return document.querySelector(`.project-card-${project} > .tasks-sub-cards > .task-${index}`).classList.remove('task-complete');
+export function removeNewTaskButton(projectIndex) {
+  const taskSubCardsDiv = document.querySelector(`.project-card-${projectIndex} > .tasks-sub-cards`);
+  taskSubCardsDiv.removeChild(taskSubCardsDiv.lastChild.previousSibling);
 }
 
-export function toggleProjectCompleteClass(index, operation) {
-  if(operation === 'add') return document.querySelector(`.project-card-${index}`).classList.add('project-complete');
-  return document.querySelector(`.project-card-${index}`).classList.remove('project-complete');
+export function noProjectsAvailableText() {
+  const noProjectsAvailable = document.createElement('h2');
+  noProjectsAvailable.classList.add('no-projects-main-page');
+  noProjectsAvailable.textContent = 'NO PROJECTS AVAILABLE';
+
+  document.querySelector('.main-section').appendChild(noProjectsAvailable);
+}
+
+export function nothingToDoTodayText() {
+  const noProjectsAvailable = document.createElement('h2');
+  noProjectsAvailable.classList.add('nothing-to-do-today');
+  noProjectsAvailable.textContent = 'NOTHING TO DO TODAY =)';
+
+  document.querySelector('.main-section').appendChild(noProjectsAvailable);
 }
 
 export function projectsCounter() {
   document.querySelector('.all-current-button').textContent = `Current (${getCurrentProjects().length})`;
   document.querySelector('.all-complete-button').textContent = `Complete (${getFinishedProjects().length})`;
+}
+
+export function toggleTaskCompleteClass(projectIndex, taskIndex, operation) {
+  if(operation === 'add') return document.querySelector(`.project-card-${projectIndex} > .tasks-sub-cards > .task-${taskIndex}`).classList.add('task-complete');
+  return document.querySelector(`.project-card-${projectIndex} > .tasks-sub-cards > .task-${taskIndex}`).classList.remove('task-complete');
+}
+
+export function toggleProjectCompleteClass(projectIndex, operation) {
+  if(operation === 'add') return document.querySelector(`.project-card-${projectIndex}`).classList.add('project-complete');
+  return document.querySelector(`.project-card-${projectIndex}`).classList.remove('project-complete');
+}
+
+export function addCompleteProjectButtonEvent(projectIndex) {
+  document.querySelector(`.complete-project-button-${projectIndex}`).addEventListener('click', projectCompleteButtonAction);
+}
+
+export function addDeleteProjectButtonEvent(index) {
+  document.querySelector(`.delete-project-button-${index}`).addEventListener('click', projectDeleteButtonAction);
+}
+
+function addCompleteTaskButtonEvent() {
+  document.querySelector(`.complete-task-button-${this.dataset.project}-${this.dataset.index}`).addEventListener('click', taskCompleteButtonAction);
+}
+
+function addDeleteTaskButtonEvent() {
+  document.querySelector(`.delete-task-button-${this.dataset.project}-${this.dataset.index}`).addEventListener('click', taskDeleteButtonAction);
 }
 
 function addCurrentProjectsButtonEvent() {
@@ -321,20 +317,4 @@ function addCurrentProjectsButtonEvent() {
 export function addCompleteProjectsButtonEvent() {
   const allProjects = document.querySelectorAll('.complete-projects > button');
   allProjects.forEach(button => button.addEventListener('click', createCompleteProjectCard));
-}
-
-function addCompleteProjectButtonEvent(index) {
-  document.querySelector(`.complete-project-button-${index}`).addEventListener('click', projectCompleteButtonAction);
-}
-
-function addCompleteTaskButtonEvent() {
-  document.querySelector(`.complete-task-button-${this.dataset.project}-${this.dataset.index}`).addEventListener('click', taskCompleteButtonAction);
-}
-
-function addDeleteProjectButtonEvent(index) {
-  document.querySelector(`.delete-project-button-${index}`).addEventListener('click', projectDeleteButtonAction);
-}
-
-function addDeleteTaskButtonEvent() {
-  document.querySelector(`.delete-task-button-${this.dataset.project}-${this.dataset.index}`).addEventListener('click', taskDeleteButtonAction);
 }
