@@ -1,9 +1,9 @@
 import "./normalize.css";
 import "./style.css";
 import { createTasksSubCards, showAllProjectCards, buildCurrentAndCompleteProjects, 
-         toggleTaskCompleteClass, removeTaskCard, projectsCounter, 
-         toggleProjectCompleteClass, addCompleteProjectsButtonEvent, createCurrentProjectNewTaskButton, 
-         removeNewTaskButton, createFilteredProjectCards, removeAllProjectCards, createFilteredTasksSubCards, 
+         toggleTaskCompleteClass, removeTaskCard, projectsCounter, toggleProjectCompleteClass, 
+         addCompleteProjectsButtonEvent, createCurrentProjectNewTaskButton, removeNewTaskButton, 
+         createFilteredProjectCards, removeAllProjectCards, createFilteredTasksSubCards, 
          noProjectsAvailableText, nothingToDoTodayText } from "./DOMManipulation.js";
 
 let currentProjects = [];
