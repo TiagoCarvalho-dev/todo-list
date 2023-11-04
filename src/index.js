@@ -400,14 +400,20 @@ function updateLocalStorage() {
 }
 
 function openingPage() {
-  if(JSON.parse(localStorage.getItem('currentProjects'))) {
+  if(localStorage.getItem('currentProjects')) {
     currentProjects = JSON.parse(localStorage.getItem('currentProjects'));
     finishedProjects = JSON.parse(localStorage.getItem('finishedProjects'));
-    showAllProjectCards('incomplete');
+    for(let i = 0; i < currentProjects.length; i++) {
+      for(let j = 0; j < currentProjects[i].tasks.length; j++) {
+        console.log(currentProjects[i].tasks[j].date);
+        currentProjects[i].tasks[j].date = new Date(currentProjects[i].tasks[j].date);
+      }
+    }
+    filterTodayProjects();
     buildCurrentAndCompleteProjects();
     projectsCounter();
   } else {
-    showAllProjectCards('incomplete');
+    filterTodayProjects();
     buildCurrentAndCompleteProjects();
     projectsCounter();
   }
