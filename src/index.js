@@ -3,7 +3,7 @@ import "./style.css";
 import { createTasksSubCards, showAllProjectCards, buildCurrentAndCompleteProjects, 
          toggleTaskCompleteClass, removeTaskCard, projectsCounter, 
          toggleProjectCompleteClass, addCompleteProjectsButtonEvent, createCurrentProjectNewTaskButton, 
-         removeNewTaskButton, createTodayProjectCards, removeAllProjectCards, createTodayTasksSubCards, 
+         removeNewTaskButton, createFilteredProjectCards, removeAllProjectCards, createFilteredTasksSubCards, 
          noProjectsAvailableText } from "./DOMManipulation.js";
 
 let currentProjects = [];
@@ -79,13 +79,7 @@ function createNewProjectButtonEvent() {
     }
 
     let newProject;
-    if(document.querySelector('#low-priority').checked) {
-      newProject = new Project(document.querySelector('#project-name').value, document.querySelector('#low-priority').value);
-    } else if(document.querySelector('#medium-priority').checked) {
-      newProject = new Project(document.querySelector('#project-name').value, document.querySelector('#medium-priority').value);
-    } else if(document.querySelector('#high-priority').checked) {
-      newProject = new Project(document.querySelector('#project-name').value, document.querySelector('#high-priority').value);
-    }
+    newProject = new Project(document.querySelector('#project-name').value, document.querySelector('input[name="priority-project"]:checked').value);
     currentProjects.push(newProject);
     sortProjects();
     updateLocalStorage();
@@ -117,16 +111,8 @@ function createNewTaskButtonEvent() {
     }
 
     let newTask;
-    if(document.querySelector('#low-priority').checked) {
-      newTask = new Task(document.querySelector('#task-name').value, new Date(new Date(document.querySelector('#task-date').value).getTime() - new Date(document.querySelector('#task-date').value).getTimezoneOffset() * -60000), 
-                         document.querySelector('#task-time').value, document.querySelector('#low-priority').value);
-    } else if(document.querySelector('#medium-priority').checked) {
-      newTask = new Task(document.querySelector('#task-name').value, new Date(new Date(document.querySelector('#task-date').value).getTime() - new Date(document.querySelector('#task-date').value).getTimezoneOffset() * -60000), 
-                         document.querySelector('#task-time').value, document.querySelector('#medium-priority').value);
-    } else if(document.querySelector('#high-priority').checked) {
-      newTask = new Task(document.querySelector('#task-name').value, new Date(new Date(document.querySelector('#task-date').value).getTime() - new Date(document.querySelector('#task-date').value).getTimezoneOffset() * -60000), 
-                         document.querySelector('#task-time').value, document.querySelector('#high-priority').value);
-    }
+    newTask = new Task(document.querySelector('#task-name').value, new Date(new Date(document.querySelector('#task-date').value).getTime() - new Date(document.querySelector('#task-date').value).getTimezoneOffset() * -60000), 
+                       document.querySelector('#task-time').value, document.querySelector('input[name="priority-task"]:checked').value);
     currentProjects[document.querySelector('.chosen-project').dataset.index].tasks.push(newTask);
     updateLocalStorage();
     createTasksSubCards(newTask.name, newTask.date, newTask.time, newTask.priority, document.querySelector('.chosen-project').dataset.index, 
@@ -275,14 +261,14 @@ function filterTodayProjects() {
       if(currentProjects[i].tasks[j].date.getTime() === new Date().setHours(0, 0, 0, 0)) {
         const filteredProject = mainSectionProjects.filter(project => project.name === currentProjects[i].name);
         if(filteredProject.length > 0) {
-          createTodayTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
-                                   currentProjects[i].tasks[j].priority, i, j, 'incomplete');
+          createFilteredTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
+                                      currentProjects[i].tasks[j].priority, i, j, 'incomplete');
           removeNewTaskButton(i);
           createCurrentProjectNewTaskButton(currentProjects[i].name, i);
         } else {
-          createTodayProjectCards(currentProjects[i].name, currentProjects[i].priority, i, 'incomplete');
-          createTodayTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
-                                   currentProjects[i].tasks[j].priority, i, j, 'incomplete');
+          createFilteredProjectCards(currentProjects[i].name, currentProjects[i].priority, i, 'incomplete');
+          createFilteredTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
+                                      currentProjects[i].tasks[j].priority, i, j, 'incomplete');
           createCurrentProjectNewTaskButton(currentProjects[i].name, i);
           mainSectionProjects.push(currentProjects[i]);
         }
@@ -305,14 +291,91 @@ function filterNextSevenDaysProjects() {
          (currentProjects[i].tasks[j].date.getTime() - new Date().setHours(0, 0, 0, 0)) >= 0) {
         const filteredProject = mainSectionProjects.filter(project => project.name === currentProjects[i].name);
         if(filteredProject.length > 0) {
-          createTodayTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
-                                   currentProjects[i].tasks[j].priority, i, j, 'incomplete');
+          createFilteredTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
+                                      currentProjects[i].tasks[j].priority, i, j, 'incomplete');
           removeNewTaskButton(i);
           createCurrentProjectNewTaskButton(currentProjects[i].name, i);
         } else {
-          createTodayProjectCards(currentProjects[i].name, currentProjects[i].priority, i, 'incomplete');
-          createTodayTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
-                                   currentProjects[i].tasks[j].priority, i, j, 'incomplete');
+          createFilteredProjectCards(currentProjects[i].name, currentProjects[i].priority, i, 'incomplete');
+          createFilteredTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
+                                      currentProjects[i].tasks[j].priority, i, j, 'incomplete');
+          createCurrentProjectNewTaskButton(currentProjects[i].name, i);
+          mainSectionProjects.push(currentProjects[i]);
+        }
+      }
+    }
+  }
+  if(!document.querySelector('.main-section').firstChild) {
+    noProjectsAvailableText();
+  }
+}
+
+document.querySelector('.filters-button').addEventListener('click', () => {
+  document.querySelector('.filters-container').classList.toggle('hidden');
+  if(document.querySelector('#selected-filter').value === 'date') {
+    document.querySelector('.date-container').classList.remove('hidden');
+  } else {
+    document.querySelector('.priority-container').classList.remove('hidden');
+  }
+  document.querySelector('#selected-filter').addEventListener('change', () => {
+    if(document.querySelector('#selected-filter').value === 'date') {
+      document.querySelector('.date-container').classList.remove('hidden');
+      document.querySelector('.priority-container').classList.add('hidden');
+    } else {
+      document.querySelector('.date-container').classList.add('hidden');
+      document.querySelector('.priority-container').classList.remove('hidden');
+    }
+  });
+});
+
+document.querySelector('.confirm-date-button').addEventListener('click', confirmDateButtonEvent);
+
+function confirmDateButtonEvent() {
+  removeAllProjectCards();
+  const mainSectionProjects = [];
+  for(let i = 0; i < currentProjects.length; i++) {
+    for(let j = 0; j < currentProjects[i].tasks.length; j++) {
+      if(currentProjects[i].tasks[j].date.getTime() === 
+         new Date(new Date(document.querySelector('#selected-date').value).getTime() - new Date(document.querySelector('#selected-date').value).getTimezoneOffset() * -60000).getTime()) {
+        const filteredProject = mainSectionProjects.filter(project => project.name === currentProjects[i].name);
+        if(filteredProject.length > 0) {
+          createFilteredTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
+                                      currentProjects[i].tasks[j].priority, i, j, 'incomplete');
+          removeNewTaskButton(i);
+          createCurrentProjectNewTaskButton(currentProjects[i].name, i);
+        } else {
+          createFilteredProjectCards(currentProjects[i].name, currentProjects[i].priority, i, 'incomplete');
+          createFilteredTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
+                                      currentProjects[i].tasks[j].priority, i, j, 'incomplete');
+          createCurrentProjectNewTaskButton(currentProjects[i].name, i);
+          mainSectionProjects.push(currentProjects[i]);
+        }
+      }
+    }
+  }
+  if(!document.querySelector('.main-section').firstChild) {
+    noProjectsAvailableText();
+  }
+}
+
+document.querySelector('.confirm-priority-button').addEventListener('click', confirmPriorityButtonEvent);
+
+function confirmPriorityButtonEvent() {
+  removeAllProjectCards();
+  const mainSectionProjects = [];
+  for(let i = 0; i < currentProjects.length; i++) {
+    for(let j = 0; j < currentProjects[i].tasks.length; j++) {
+      if(currentProjects[i].tasks[j].priority === document.querySelector('input[name="priority-filter"]:checked').value) {
+        const filteredProject = mainSectionProjects.filter(project => project.name === currentProjects[i].name);
+        if(filteredProject.length > 0) {
+          createFilteredTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
+                                      currentProjects[i].tasks[j].priority, i, j, 'incomplete');
+          removeNewTaskButton(i);
+          createCurrentProjectNewTaskButton(currentProjects[i].name, i);
+        } else {
+          createFilteredProjectCards(currentProjects[i].name, currentProjects[i].priority, i, 'incomplete');
+          createFilteredTasksSubCards(currentProjects[i].tasks[j].name, currentProjects[i].tasks[j].date, currentProjects[i].tasks[j].time, 
+                                      currentProjects[i].tasks[j].priority, i, j, 'incomplete');
           createCurrentProjectNewTaskButton(currentProjects[i].name, i);
           mainSectionProjects.push(currentProjects[i]);
         }

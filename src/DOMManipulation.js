@@ -279,13 +279,13 @@ function createCompleteProjectCard() {
   }
 }
 
-export function createTodayProjectCards(projectName, projectPriority, projectIndex, status) {
+export function createFilteredProjectCards(projectName, projectPriority, projectIndex, status) {
   createProjectCard(projectName, projectPriority, projectIndex, status);
   addCompleteProjectButtonEvent(projectIndex);
   addDeleteProjectButtonEvent(projectIndex);
 }
 
-export function createTodayTasksSubCards(taskName, taskDate, taskTime, taskPriority, projectIndex, taskIndex, status) {
+export function createFilteredTasksSubCards(taskName, taskDate, taskTime, taskPriority, projectIndex, taskIndex, status) {
   createTasksSubCards(taskName, taskDate, taskTime, taskPriority, projectIndex, taskIndex, status);
 }
 
