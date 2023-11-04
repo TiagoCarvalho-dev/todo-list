@@ -38,25 +38,6 @@ class Task {
   complete = false;
 }
 
-document.querySelector('.all-current-button').addEventListener('click',() => {
-  sortProjects();
-  showAllProjectCards('incomplete');
-});
-
-document.querySelector('.new-project-button').addEventListener('click', () => {
-  document.querySelector('#new-project-dialog').showModal();
-});
-
-document.querySelector('.cancel-project-button').addEventListener('click', () => {
-  document.querySelector('#new-project-dialog').close();
-  document.querySelector('.new-project-form').reset();
-});
-
-document.querySelector('.create-project-button').addEventListener('click', () => {
-  createNewProjectButtonEvent();
-  document.querySelector('.new-project-form').reset();
-});
-
 function createNewProjectButtonEvent() {
   const fillAllProjectInformationDialog = document.querySelector('#fill-all-project-information-alert');
   const existingProjectNameDialog = document.querySelector('#existing-name-alert');
@@ -88,45 +69,6 @@ function createNewProjectButtonEvent() {
   buildCurrentAndCompleteProjects();
   projectsCounter();
 }
-
-document.querySelector('.cancel-task-button').addEventListener('click', () => {
-  document.querySelector('#new-task-dialog').close();
-  document.querySelector('.new-task-form').reset();
-});
-
-document.querySelector('.create-task-button').addEventListener('click', () => {
-  createNewTaskButtonEvent();
-  document.querySelector('.new-task-form').reset();
-});
-
-function createNewTaskButtonEvent() {
-  const fillAllTaskInformationDialog = document.querySelector('#fill-all-task-information-alert');
-
-  if(!document.querySelector('#task-name').value ||
-     !document.querySelector('#task-date').value ||
-     !document.querySelector('#task-time').value) {
-    fillAllTaskInformationDialog.showModal();
-    document.querySelector('.ok-button-task-information-alert').onclick = () => {
-      fillAllTaskInformationDialog.close();
-    }
-    return
-  }
-
-  let newTask;
-  newTask = new Task(document.querySelector('#task-name').value, fixDateAccuracy('#task-date'), 
-                      document.querySelector('#task-time').value, document.querySelector('input[name="priority-task"]:checked').value);
-  currentProjects[document.querySelector('.chosen-project').dataset.index].tasks.push(newTask);
-  updateLocalStorage();
-  createTasksSubCards(newTask.name, newTask.date, newTask.time, newTask.priority, document.querySelector('.chosen-project').dataset.index, 
-                      currentProjects[document.querySelector('.chosen-project').dataset.index].tasks.length - 1, 'incomplete');
-  removeNewTaskButton(document.querySelector('.chosen-project').dataset.index);
-  createCurrentProjectNewTaskButton(currentProjects[document.querySelector('.chosen-project').dataset.index].name, document.querySelector('.chosen-project').dataset.index);
-}
-
-document.querySelector('.all-complete-button').addEventListener('click', () => {
-  sortProjects();
-  showAllProjectCards('complete');
-});
 
 export function projectCompleteButtonAction() {
   if(document.querySelector(`.project-card-${this.dataset.index} > .tasks-sub-cards`).firstChild) {
@@ -211,6 +153,30 @@ export function projectDeleteButtonAction() {
   }
 }
 
+function createNewTaskButtonEvent() {
+  const fillAllTaskInformationDialog = document.querySelector('#fill-all-task-information-alert');
+
+  if(!document.querySelector('#task-name').value ||
+     !document.querySelector('#task-date').value ||
+     !document.querySelector('#task-time').value) {
+    fillAllTaskInformationDialog.showModal();
+    document.querySelector('.ok-button-task-information-alert').onclick = () => {
+      fillAllTaskInformationDialog.close();
+    }
+    return
+  }
+
+  let newTask;
+  newTask = new Task(document.querySelector('#task-name').value, fixDateAccuracy('#task-date'), 
+                      document.querySelector('#task-time').value, document.querySelector('input[name="priority-task"]:checked').value);
+  currentProjects[document.querySelector('.chosen-project').dataset.index].tasks.push(newTask);
+  updateLocalStorage();
+  createTasksSubCards(newTask.name, newTask.date, newTask.time, newTask.priority, document.querySelector('.chosen-project').dataset.index, 
+                      currentProjects[document.querySelector('.chosen-project').dataset.index].tasks.length - 1, 'incomplete');
+  removeNewTaskButton(document.querySelector('.chosen-project').dataset.index);
+  createCurrentProjectNewTaskButton(currentProjects[document.querySelector('.chosen-project').dataset.index].name, document.querySelector('.chosen-project').dataset.index);
+}
+
 export function taskCompleteButtonAction() {
   const confirmTaskCompleteDialog = document.querySelector('#confirm-complete-task');
   const confirmTaskIncompleteDialog = document.querySelector('#confirm-incomplete-task');
@@ -254,8 +220,6 @@ export function taskDeleteButtonAction() {
   }
 }
 
-document.querySelector('.today-button').addEventListener('click', filterTodayProjects);
-
 function filterTodayProjects() {
   removeAllProjectCards();
   const mainSectionProjects = [];
@@ -282,8 +246,6 @@ function filterTodayProjects() {
     nothingToDoTodayText();
   }
 }
-
-document.querySelector('.next-seven-days-button').addEventListener('click', filterNextSevenDaysProjects);
 
 function filterNextSevenDaysProjects() {
   removeAllProjectCards();
@@ -313,7 +275,7 @@ function filterNextSevenDaysProjects() {
   }
 }
 
-document.querySelector('.filters-button').addEventListener('click', () => {
+function filtersButtonEvent() {
   const selectedFilter = document.querySelector('#selected-filter');
   const dateContainer = document.querySelector('.date-container');
   const priorityContainer = document.querySelector('.priority-container');
@@ -329,9 +291,7 @@ document.querySelector('.filters-button').addEventListener('click', () => {
     dateContainer.classList.add('hidden');
     priorityContainer.classList.remove('hidden');
   });
-});
-
-document.querySelector('.confirm-date-button').addEventListener('click', confirmDateButtonEvent);
+}
 
 function confirmDateButtonEvent() {
   removeAllProjectCards();
@@ -359,8 +319,6 @@ function confirmDateButtonEvent() {
     noProjectsAvailableText();
   }
 }
-
-document.querySelector('.confirm-priority-button').addEventListener('click', confirmPriorityButtonEvent);
 
 function confirmPriorityButtonEvent() {
   removeAllProjectCards();
@@ -423,5 +381,49 @@ function openingPage() {
   buildCurrentAndCompleteProjects();
   projectsCounter();
 }
+
+document.querySelector('.new-project-button').addEventListener('click', () => {
+  document.querySelector('#new-project-dialog').showModal();
+});
+
+document.querySelector('.create-project-button').addEventListener('click', () => {
+  createNewProjectButtonEvent();
+  document.querySelector('.new-project-form').reset();
+});
+
+document.querySelector('.cancel-project-button').addEventListener('click', () => {
+  document.querySelector('#new-project-dialog').close();
+  document.querySelector('.new-project-form').reset();
+});
+
+document.querySelector('.create-task-button').addEventListener('click', () => {
+  createNewTaskButtonEvent();
+  document.querySelector('.new-task-form').reset();
+});
+
+document.querySelector('.cancel-task-button').addEventListener('click', () => {
+  document.querySelector('#new-task-dialog').close();
+  document.querySelector('.new-task-form').reset();
+});
+
+document.querySelector('.today-button').addEventListener('click', filterTodayProjects);
+
+document.querySelector('.next-seven-days-button').addEventListener('click', filterNextSevenDaysProjects);
+
+document.querySelector('.filters-button').addEventListener('click', filtersButtonEvent);
+
+document.querySelector('.confirm-date-button').addEventListener('click', confirmDateButtonEvent);
+
+document.querySelector('.confirm-priority-button').addEventListener('click', confirmPriorityButtonEvent);
+
+document.querySelector('.all-current-button').addEventListener('click',() => {
+  sortProjects();
+  showAllProjectCards('incomplete');
+});
+
+document.querySelector('.all-complete-button').addEventListener('click', () => {
+  sortProjects();
+  showAllProjectCards('complete');
+});
 
 openingPage();
