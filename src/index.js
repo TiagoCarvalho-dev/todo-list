@@ -4,7 +4,7 @@ import { createTasksSubCards, showAllProjectCards, buildCurrentAndCompleteProjec
          toggleTaskCompleteClass, removeTaskCard, projectsCounter, toggleProjectCompleteClass, 
          addCompleteProjectsButtonEvent, createCurrentProjectNewTaskButton, removeNewTaskButton, 
          removeAllProjectCards, noProjectsAvailableText, nothingToDoTodayText, addCompleteProjectButtonEvent,
-         addDeleteProjectButtonEvent} from "./DOMManipulation.js";
+         addDeleteProjectButtonEvent, createProjectCard} from "./DOMManipulation.js";
 
 let currentProjects = [];
 let finishedProjects = [];
