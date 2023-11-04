@@ -4,7 +4,7 @@ import { createTasksSubCards, showAllProjectCards, buildCurrentAndCompleteProjec
          toggleTaskCompleteClass, removeTaskCard, projectsCounter, 
          toggleProjectCompleteClass, addCompleteProjectsButtonEvent, createCurrentProjectNewTaskButton, 
          removeNewTaskButton, createFilteredProjectCards, removeAllProjectCards, createFilteredTasksSubCards, 
-         noProjectsAvailableText } from "./DOMManipulation.js";
+         noProjectsAvailableText, nothingToDoTodayText } from "./DOMManipulation.js";
 
 let currentProjects = [];
 let finishedProjects = [];
@@ -276,7 +276,7 @@ function filterTodayProjects() {
     }
   }
   if(!document.querySelector('.main-section').firstChild) {
-    noProjectsAvailableText();
+    nothingToDoTodayText();
   }
 }
 

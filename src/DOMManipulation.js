@@ -37,7 +37,8 @@ export function removeNewTaskButton(index) {
 }
 
 export function createProjectCard(name, priority, index, status) {
-  if(document.querySelector('.main-section').firstChild === document.querySelector('.no-projects-main-page')) {
+  if(document.querySelector('.main-section').firstChild === document.querySelector('.no-projects-main-page') ||
+     document.querySelector('.main-section').firstChild === document.querySelector('.nothing-to-do-today')) {
     removeAllProjectCards();
   }
 
@@ -163,6 +164,14 @@ export function noProjectsAvailableText() {
   const noProjectsAvailable = document.createElement('h2');
   noProjectsAvailable.classList.add('no-projects-main-page');
   noProjectsAvailable.textContent = 'NO PROJECTS AVAILABLE';
+
+  document.querySelector('.main-section').appendChild(noProjectsAvailable);
+}
+
+export function nothingToDoTodayText() {
+  const noProjectsAvailable = document.createElement('h2');
+  noProjectsAvailable.classList.add('nothing-to-do-today');
+  noProjectsAvailable.textContent = 'NOTHING TO DO TODAY =)';
 
   document.querySelector('.main-section').appendChild(noProjectsAvailable);
 }
