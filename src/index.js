@@ -1,10 +1,13 @@
 import "./normalize.css";
 import "./style.css";
+import html from "./home.html";
 import { createTasksSubCards, showAllProjectCards, buildCurrentAndCompleteProjects, 
          toggleTaskCompleteClass, removeTaskCard, projectsCounter, toggleProjectCompleteClass, 
          addCompleteProjectsButtonEvent, createCurrentProjectNewTaskButton, removeNewTaskButton, 
          removeAllProjectCards, noProjectsAvailableText, nothingToDoTodayText, addCompleteProjectButtonEvent,
-         addDeleteProjectButtonEvent, createProjectCard} from "./DOMManipulation.js";
+         addDeleteProjectButtonEvent, createProjectCard } from "./DOMManipulation.js";
+
+document.body.innerHTML = html;
 
 let currentProjects = [];
 let finishedProjects = [];

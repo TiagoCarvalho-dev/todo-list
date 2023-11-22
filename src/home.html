@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To do list</title>
+</head>
+<body>
+  <nav>
+    <div class="nav-left-side">
+      <h1>PLANNER</h1>
+    </div>
+    <div class="nav-middle">
+      <button class="new-project-button"><img src="../src/images/folder-plus.png" alt="new-project-symbol" width="30px" height="auto">NEW PROJECT</button>
+    </div>
+    <div class="nav-right-side">
+      <button class="dark-mode">DARK MODE</button>
+    </div>
+  </nav>
+  <div class="left-menu">
+    <button class="today-button">TODAY</button>
+    <button class="next-seven-days-button">NEXT SEVEN DAYS</button>
+    <button class="filters-button">FILTERS</button>
+    <div class="filters-container hidden">
+      <div class="select-filter">
+        <label for="selected-filter">SELECT: </label>
+        <select name="selected-filter" id="selected-filter">
+          <option value="date">DATE</option>
+          <option value="priority">PRIORITY</option>
+        </select>
+      </div>
+      <div class="date-container">
+        <div class="date-filter">
+          <label for="selected-date">SELECT: </label>
+          <input type="date" id="selected-date">
+        </div>
+        <button class="confirm-date-button">CONFIRM</button>
+      </div>
+      <div class="priority-container hidden">
+        <div class="priority-filter">
+          <legend>SELECT: </legend>
+          <div class="priority-radio-filter">
+            <input type="radio" id="low-priority-filter" name="priority-filter" value="low-priority" checked>
+            <label for="low-priority">Low</label>
+            <input type="radio" id="medium-priority-filter" name="priority-filter" value="medium-priority">
+            <label for="medium-priority">Medium</label>
+            <input type="radio" id="high-priority-filter" name="priority-filter" value="high-priority">
+            <label for="high-priority">High</label>
+          </div>
+        </div>
+        <button class="confirm-priority-button">CONFIRM</button>
+      </div>
+    </div>
+    <div class="current-projects-container">
+      <button class="all-current-button">Current (0)</button>
+      <div class="current-projects"></div>
+    </div>
+    <div class="complete-projects-container">
+      <button class="all-complete-button">Complete (0)</button>
+      <div class="complete-projects"></div>
+    </div>
+  </div>
+  <div class="main-section"></div>
+  <footer>
+    <p>Copyright ©</p>
+    <script>document.write(new Date().getFullYear())</script>
+    <p>TiagoCarvalho-dev</p>
+    <a href="https://github.com/TiagoCarvalho-dev"><img src="../src/images/github.svg" alt="Github Logo" width="30px" height="auto"></a>
+  </footer>
+
+  <dialog id="new-project-dialog">
+    <form method="dialog" class="new-project-form">
+      <div class="project-name-container">
+        <label for="project-name">Project Name</label>
+        <input type="text" name="project-name" id="project-name">
+      </div>
+      <div class="project-priority-container">
+        <legend>Priority</legend>
+        <div class="project-radio-container">
+          <input type="radio" id="low-priority-project" name="priority-project" value="low-priority" checked>
+          <label for="low-priority">Low</label>
+          <input type="radio" id="medium-priority-project" name="priority-project" value="medium-priority">
+          <label for="medium-priority">Medium</label>
+          <input type="radio" id="high-priority-project" name="priority-project" value="high-priority">
+          <label for="high-priority">High</label>
+        </div>
+      </div>
+      <div class="buttons">
+        <button class="cancel-project-button">Cancel</button>
+        <button class="create-project-button">Create</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="new-task-dialog">
+    <form method="dialog" class="new-task-form">
+      <div class="chosen-project-container">
+        <p>Project: </p>
+        <p class="chosen-project"></p>
+      </div>
+      <div class="task-name-container">
+        <label for="task-name-container">Task Name</label>
+        <input type="text" name="task-name" id="task-name">
+      </div>
+      <div class="task-date-container">
+        <label for="task-date">Due Date</label>
+        <input type="date" name="task-date" id="task-date">
+      </div>
+      <div class="task-time-container">
+        <label for="task-time">Due Time</label>
+        <input type="time" name="task-time" id="task-time">
+      </div>
+      <div class="task-priority-container">
+        <legend>Priority</legend>
+        <div class="task-radio-container">
+          <input type="radio" id="low-priority-task" name="priority-task" value="low-priority" checked>
+          <label for="low-priority">Low</label>
+          <input type="radio" id="medium-priority-task" name="priority-task" value="medium-priority">
+          <label for="medium-priority">Medium</label>
+          <input type="radio" id="high-priority-task" name="priority-task" value="high-priority">
+          <label for="high-priority">High</label>
+        </div>
+      </div>
+      <div class="buttons">
+        <button class="cancel-task-button">Cancel</button>
+        <button class="create-task-button">Create</button>
+      </div>
+    </form>
+  </dialog>
+
+  <dialog id="confirm-delete-project">
+    <p class="confirmation">Are you sure you want to delete this project?</p>
+    <div class="buttons">
+      <button class="no-button-delete-project">NO</button>
+      <button class="yes-button-delete-project">YES</button>
+    </div>
+  </dialog>
+
+  <dialog id="confirm-delete-task">
+    <p class="confirmation">Are you sure you want to delete this task?</p>
+    <div class="buttons">
+      <button class="no-button-delete-task">NO</button>
+      <button class="yes-button-delete-task">YES</button>
+    </div>
+  </dialog>
+
+  <dialog id="confirm-complete-project">
+    <p class="confirmation">Are you sure you want to mark this project as complete?</p>
+    <div class="buttons">
+      <button class="no-button-complete-project">NO</button>
+      <button class="yes-button-complete-project">YES</button>
+    </div>
+  </dialog>
+
+  <dialog id="confirm-incomplete-project">
+    <p class="confirmation">Are you sure you want to mark this project as incomplete?</p>
+    <div class="buttons">
+      <button class="no-button-incomplete-project">NO</button>
+      <button class="yes-button-incomplete-project">YES</button>
+    </div>
+  </dialog>
+
+  <dialog id="complete-all-tasks-alert">
+    <p class="confirmation">Complete all tasks before completing a project</p>
+    <div class="buttons">
+      <button class="ok-button-tasks-alert">OK</button>
+    </div>
+  </dialog>
+
+  <dialog id="fill-all-task-information-alert">
+    <p class="confirmation">Please fill all the task information.</p>
+    <div class="buttons">
+      <button class="ok-button-task-information-alert">OK</button>
+    </div>
+  </dialog>
+
+  <dialog id="fill-all-project-information-alert">
+    <p class="confirmation">Please select a project name.</p>
+    <div class="buttons">
+      <button class="ok-button-project-information-alert">OK</button>
+    </div>
+  </dialog>
+
+  <dialog id="existing-name-alert">
+    <p class="confirmation">Project name already exist.</p>
+    <div class="buttons">
+      <button class="ok-button-existing-name">OK</button>
+    </div>
+  </dialog>
+
+  <dialog id="confirm-complete-task">
+    <p class="confirmation">Mark task as complete?</p>
+    <div class="buttons">
+      <button class="no-button-complete-task">NO</button>
+      <button class="yes-button-complete-task">YES</button>
+    </div>
+  </dialog>
+
+  <dialog id="confirm-incomplete-task">
+    <p class="confirmation">Mark task as incomplete?</p>
+    <div class="buttons">
+      <button class="no-button-incomplete-task">NO</button>
+      <button class="yes-button-incomplete-task">YES</button>
+    </div>
+  </dialog>
+</body>
+</html>
