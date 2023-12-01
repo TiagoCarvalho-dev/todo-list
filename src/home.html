@@ -18,12 +18,12 @@
     </div>
   </nav>
   <div class="left-menu">
-    <button class="today-button">TODAY</button>
-    <button class="next-seven-days-button">NEXT SEVEN DAYS</button>
-    <button class="filters-button">FILTERS</button>
+    <button class="today-button"><img src="./images/inbox.png" alt="inbox" width="17px" height="auto">TODAY</button>
+    <button class="next-seven-days-button"><img src="./images/clock-alert-outline.png" alt="clock alert" width="17px" height="auto">NEXT SEVEN DAYS</button>
+    <button class="filters-button"><img src="./images/filter-plus-outline.png" alt="filter plus" width="17px" height="auto">FILTERS</button>
     <div class="filters-container hidden">
       <div class="select-filter">
-        <label for="selected-filter">SELECT: </label>
+        <label for="selected-filter">TYPE: </label>
         <select name="selected-filter" id="selected-filter">
           <option value="date">DATE</option>
           <option value="priority">PRIORITY</option>
@@ -31,32 +31,32 @@
       </div>
       <div class="date-container">
         <div class="date-filter">
-          <label for="selected-date">SELECT: </label>
+          <label for="selected-date">DATE: </label>
           <input type="date" id="selected-date">
         </div>
         <button class="confirm-date-button">CONFIRM</button>
       </div>
       <div class="priority-container hidden">
         <div class="priority-filter">
-          <legend>SELECT: </legend>
+          <legend>PRIORITY: </legend>
           <div class="priority-radio-filter">
             <input type="radio" id="low-priority-filter" name="priority-filter" value="low-priority" checked>
-            <label for="low-priority">Low</label>
+            <label for="low-priority-filter">Low</label>
             <input type="radio" id="medium-priority-filter" name="priority-filter" value="medium-priority">
-            <label for="medium-priority">Medium</label>
+            <label for="medium-priority-filter">Medium</label>
             <input type="radio" id="high-priority-filter" name="priority-filter" value="high-priority">
-            <label for="high-priority">High</label>
+            <label for="high-priority-filter">High</label>
           </div>
         </div>
         <button class="confirm-priority-button">CONFIRM</button>
       </div>
     </div>
     <div class="current-projects-container">
-      <button class="all-current-button">Current (0)</button>
+      <button class="all-current-button">CURRENT (0)</button>
       <div class="current-projects"></div>
     </div>
     <div class="complete-projects-container">
-      <button class="all-complete-button">Complete (0)</button>
+      <button class="all-complete-button">COMPLETE (0)</button>
       <div class="complete-projects"></div>
     </div>
   </div>
@@ -71,18 +71,18 @@
   <dialog id="new-project-dialog">
     <form method="dialog" class="new-project-form">
       <div class="project-name-container">
-        <label for="project-name">Project Name</label>
+        <label for="project-name">Project Name:</label>
         <input type="text" name="project-name" id="project-name">
       </div>
       <div class="project-priority-container">
         <legend>Priority</legend>
         <div class="project-radio-container">
           <input type="radio" id="low-priority-project" name="priority-project" value="low-priority" checked>
-          <label for="low-priority">Low</label>
+          <label for="low-priority-project">Low</label>
           <input type="radio" id="medium-priority-project" name="priority-project" value="medium-priority">
-          <label for="medium-priority">Medium</label>
+          <label for="medium-priority-project">Medium</label>
           <input type="radio" id="high-priority-project" name="priority-project" value="high-priority">
-          <label for="high-priority">High</label>
+          <label for="high-priority-project">High</label>
         </div>
       </div>
       <div class="buttons">
@@ -114,11 +114,11 @@
         <legend>Priority</legend>
         <div class="task-radio-container">
           <input type="radio" id="low-priority-task" name="priority-task" value="low-priority" checked>
-          <label for="low-priority">Low</label>
+          <label for="low-priority-task">Low</label>
           <input type="radio" id="medium-priority-task" name="priority-task" value="medium-priority">
-          <label for="medium-priority">Medium</label>
+          <label for="medium-priority-task">Medium</label>
           <input type="radio" id="high-priority-task" name="priority-task" value="high-priority">
-          <label for="high-priority">High</label>
+          <label for="high-priority-task">High</label>
         </div>
       </div>
       <div class="buttons">

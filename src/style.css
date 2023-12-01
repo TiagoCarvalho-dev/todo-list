@@ -2,7 +2,9 @@
 
 :root {
   --primary-color: rgb(94, 94, 255);
-  --secondary-color: rgb(255, 239, 98);
+  --confirm-color: rgb(126, 215, 193);
+  --negative-color: rgb(255, 120, 120);
+  --light-gray: rgb(238, 238, 238);
 }
 
 body {
@@ -11,6 +13,10 @@ body {
   grid-template-rows: 73px 1fr 73px;
   font-family: 'roboto';
   min-height: 100vh;
+}
+
+body button:hover {
+  cursor: pointer;
 }
 
 nav {
@@ -59,19 +65,54 @@ nav button:hover {
   grid-column: 1 / 2;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.4rem;
+  background-color: var(--light-gray);
+  box-shadow: 1px 2px 6px black;
+  padding: 1rem;
+  font-size: 1rem;
+  width: 170px;
+}
+
+.left-menu img {
+  vertical-align: middle;
+  padding-right: 0.3rem;
+  filter: invert(32%) sepia(51%) saturate(2637%) hue-rotate(227deg) brightness(104%) contrast(104%);
+}
+
+.left-menu button {
+  height: 30px;
+  border: none;
+}
+
+.left-menu button:hover {
+  text-decoration: underline;
+}
+
+.filters-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  font-size: 0.9rem;
+  background-color: white;
+  border-color: black;
+  border-style: solid;
+  border-width: 0.1rem;
+  border-radius: 0.2rem;
+  padding: 0.5rem;
 }
 
 .current-projects-container,
 .complete-projects-container {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
 }
 
 .main-section {
   grid-row: 2 / 3;
   grid-column: 2 / 3;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  margin: 1rem;
 }
 
 .current-projects,
@@ -88,31 +129,91 @@ footer {
   align-items: center;
   gap: 0.8rem;
   background-color: var(--primary-color);
-  box-shadow: 20px -1px 6px black;
+  box-shadow: 0px -1px 6px black;
   color: white;
 }
 
-.project-card {
+dialog {
+  border-radius: 0.4rem;
+  border-color: var(--primary-color);
+}
+
+dialog form {
   display: flex;
   flex-direction: column;
+  gap: 0.8rem;
+}
+
+.buttons {
+  display: flex;
+  justify-content: end;
+  gap: 1rem;
+}
+
+button[class^="create"],
+button[class^="yes"],
+button[class^="ok"] {
+  background-color: var(--confirm-color);
+  font-weight: normal;
+  color: white;
+  border-color: var(--confirm-color);
+  border-style: solid;
+  border-width: 0.1rem;
+  border-radius: 0.2rem;
+  width: 5rem;
+}
+
+button[class^="cancel"],
+button[class^="no"] {
+  background-color: var(--negative-color);
+  font-weight: normal;
+  color: white;
+  border-color: var(--negative-color);
+  border-style: solid;
+  border-width: 0.1rem;
+  border-radius: 0.2rem;
+  width: 5rem;
+}
+
+div[class^="project-card-"] {
+  display: flex;
+  flex-direction: column;
+  border: solid 2px red;
+  margin: 1rem;
 }
 
 .project-sub-card {
   display: flex;
+  border: solid 2px yellow;
 }
 
 .tasks-sub-cards {
   display: flex;
   flex-direction: column;
+  border: solid 2px green;
 }
 
-.tasks-sub-cards > div {
+div[class^="task-"] {
   display: flex;
   flex-direction: column;
+  border: solid 2px blue;
+  margin: 0.5rem;
+  padding: 0.5rem;
 }
 
-.tasks-sub-cards > div > div {
+div[class^="task-"] > div:first-child {
   display: flex;
+  justify-content: space-between;
+}
+
+.buttons-container {
+  display: flex;
+  gap: 1rem;
+}
+
+div[class^="task-"] > div:last-child {
+  display: flex;
+  gap: 1rem;
 }
 
 .task-complete {

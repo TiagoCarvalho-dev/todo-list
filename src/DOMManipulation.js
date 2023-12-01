@@ -1,5 +1,7 @@
 import { convertTimeToMilliseconds, getCurrentProjects, getFinishedProjects, projectCompleteButtonAction, 
          projectDeleteButtonAction, taskCompleteButtonAction, taskDeleteButtonAction } from "./index.js";
+import trash from "./images/trash-can-outline.png";
+import check from "./images/check-bold.png";
 
 export function createProjectCard(projectName, projectPriority, projectIndex, projectStatus) {
   if(document.querySelector('.main-section').firstChild === document.querySelector('.no-projects-main-page') ||
@@ -24,12 +26,26 @@ export function createProjectCard(projectName, projectPriority, projectIndex, pr
   const completeProjectButton = document.createElement('button');
   completeProjectButton.classList.add(`complete-project-button-${projectIndex}`);
   completeProjectButton.dataset.index = projectIndex;
-  completeProjectButton.textContent = 'DONE';
+
+  const checkImageProject = document.createElement('img');
+  checkImageProject.setAttribute('src', check);
+  checkImageProject.setAttribute('alt', 'check-mark');
+  checkImageProject.setAttribute('width', '30px');
+  checkImageProject.setAttribute('height', 'auto');
+
+  completeProjectButton.appendChild(checkImageProject);
 
   const deleteProjectButton = document.createElement('button');
   deleteProjectButton.classList.add(`delete-project-button-${projectIndex}`);
   deleteProjectButton.dataset.index = projectIndex;
-  deleteProjectButton.textContent = 'DELETE';
+
+  const deleteImageProject = document.createElement('img');
+  deleteImageProject.setAttribute('src', trash);
+  deleteImageProject.setAttribute('alt', 'trash-can');
+  deleteImageProject.setAttribute('width', '30px');
+  deleteImageProject.setAttribute('height', 'auto');
+
+  deleteProjectButton.appendChild(deleteImageProject);
 
   projectSubCardDiv.appendChild(projectNameH3);
   projectSubCardDiv.appendChild(projectPriorityP);
@@ -69,16 +85,27 @@ export function createTasksSubCards(taskName, taskDate, taskTime, taskPriority, 
   const nameDiv = document.createElement('div');
 
   const taskNameH4 = document.createElement('h4');
+  taskNameH4.classList.add('tasks-name');
   taskNameH4.textContent = taskName;
 
   nameDiv.appendChild(taskNameH4);
 
   if(projectStatus === 'incomplete') {
+    const nameDivButtonContainer = document.createElement('div');
+    nameDivButtonContainer.classList.add('buttons-container');
+
     const completeTaskButton = document.createElement('button');
     completeTaskButton.classList.add(`complete-task-button-${projectIndex}-${taskIndex}`);
     completeTaskButton.dataset.project = projectIndex;
     completeTaskButton.dataset.index = taskIndex;
-    completeTaskButton.textContent = 'DONE';
+
+    const checkImageTask = document.createElement('img');
+    checkImageTask.setAttribute('src', check);
+    checkImageTask.setAttribute('alt', 'check-mark');
+    checkImageTask.setAttribute('width', '30px');
+    checkImageTask.setAttribute('height', 'auto');
+
+    completeTaskButton.appendChild(checkImageTask);
 
     completeTaskButton.addEventListener('click', addCompleteTaskButtonEvent);
 
@@ -86,23 +113,35 @@ export function createTasksSubCards(taskName, taskDate, taskTime, taskPriority, 
     deleteTaskButton.classList.add(`delete-task-button-${projectIndex}-${taskIndex}`);
     deleteTaskButton.dataset.project = projectIndex;
     deleteTaskButton.dataset.index = taskIndex;
-    deleteTaskButton.textContent = 'DELETE';
+
+    const deleteImageTask = document.createElement('img');
+    deleteImageTask.setAttribute('src', trash);
+    deleteImageTask.setAttribute('alt', 'trash-can');
+    deleteImageTask.setAttribute('width', '30px');
+    deleteImageTask.setAttribute('height', 'auto');
+
+    deleteTaskButton.appendChild(deleteImageTask);
 
     deleteTaskButton.addEventListener('click', addDeleteTaskButtonEvent);
 
-    nameDiv.appendChild(completeTaskButton);
-    nameDiv.appendChild(deleteTaskButton);
+    nameDivButtonContainer.appendChild(completeTaskButton);
+    nameDivButtonContainer.appendChild(deleteTaskButton);
+
+    nameDiv.appendChild(nameDivButtonContainer);
   }
   
   const detailsDiv = document.createElement('div');
 
   const taskDateP = document.createElement('p');
+  taskDateP.classList.add('tasks-date');
   taskDateP.textContent = taskDate.toLocaleDateString();
 
   const taskTimeP = document.createElement('p');
+  taskTimeP.classList.add('tasks-time');
   taskTimeP.textContent = taskTime;
 
   const taskPriorityP = document.createElement('p');
+  taskPriorityP.classList.add('tasks-priority');
   taskPriorityP.textContent = taskPriority;
 
   detailsDiv.appendChild(taskDateP);
@@ -279,8 +318,8 @@ export function nothingToDoTodayText() {
 }
 
 export function projectsCounter() {
-  document.querySelector('.all-current-button').textContent = `Current (${getCurrentProjects().length})`;
-  document.querySelector('.all-complete-button').textContent = `Complete (${getFinishedProjects().length})`;
+  document.querySelector('.all-current-button').textContent = `CURRENT (${getCurrentProjects().length})`;
+  document.querySelector('.all-complete-button').textContent = `COMPLETE (${getFinishedProjects().length})`;
 }
 
 export function toggleTaskCompleteClass(projectIndex, taskIndex, operation) {
