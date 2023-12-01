@@ -23,6 +23,18 @@ export function createProjectCard(projectName, projectPriority, projectIndex, pr
   const projectPriorityP = document.createElement('p');
   projectPriorityP.textContent = projectPriority;
 
+  if(projectPriority === 'Low') {
+    projectPriorityP.style.color = 'green';
+  }
+  
+  if(projectPriority === 'Medium') {
+    projectPriorityP.style.color = 'orange';
+  }
+  
+  if(projectPriority === 'High') {
+    projectPriorityP.style.color = 'red';
+  }
+
   const completeProjectButton = document.createElement('button');
   completeProjectButton.classList.add(`complete-project-button-${projectIndex}`);
   completeProjectButton.dataset.index = projectIndex;
@@ -102,7 +114,7 @@ export function createTasksSubCards(taskName, taskDate, taskTime, taskPriority, 
     const checkImageTask = document.createElement('img');
     checkImageTask.setAttribute('src', check);
     checkImageTask.setAttribute('alt', 'check-mark');
-    checkImageTask.setAttribute('width', '30px');
+    checkImageTask.setAttribute('width', '20px');
     checkImageTask.setAttribute('height', 'auto');
 
     completeTaskButton.appendChild(checkImageTask);
@@ -117,7 +129,7 @@ export function createTasksSubCards(taskName, taskDate, taskTime, taskPriority, 
     const deleteImageTask = document.createElement('img');
     deleteImageTask.setAttribute('src', trash);
     deleteImageTask.setAttribute('alt', 'trash-can');
-    deleteImageTask.setAttribute('width', '30px');
+    deleteImageTask.setAttribute('width', '20px');
     deleteImageTask.setAttribute('height', 'auto');
 
     deleteTaskButton.appendChild(deleteImageTask);
@@ -143,6 +155,21 @@ export function createTasksSubCards(taskName, taskDate, taskTime, taskPriority, 
   const taskPriorityP = document.createElement('p');
   taskPriorityP.classList.add('tasks-priority');
   taskPriorityP.textContent = taskPriority;
+
+  if(taskPriority === 'Low') {
+    taskPriorityP.style.color = 'green';
+    taskPriorityP.classList.add('low-priority-task');
+  }
+  
+  if(taskPriority === 'Medium') {
+    taskPriorityP.style.color = 'orange';
+    taskPriorityP.classList.add('medium-priority-task');
+  }
+  
+  if(taskPriority === 'High') {
+    taskPriorityP.style.color = 'red';
+    taskPriorityP.classList.add('high-priority-task');
+  }
 
   detailsDiv.appendChild(taskDateP);
   detailsDiv.appendChild(taskTimeP);
@@ -180,6 +207,16 @@ export function buildCurrentAndCompleteProjects() {
     projectName.dataset.priority = getCurrentProjects()[i].priority;
     projectName.dataset.index = i;
     projectName.textContent = getCurrentProjects()[i].name;
+
+    if(getCurrentProjects()[i].priority === 'Low') {
+      projectName.classList.add('low-priority-project');
+    }
+    if(getCurrentProjects()[i].priority === 'Medium') {
+      projectName.classList.add('medium-priority-project');
+    }
+    if(getCurrentProjects()[i].priority === 'High') {
+      projectName.classList.add('high-priority-project');
+    }
   
     document.querySelector('.current-projects').appendChild(projectName);
   }
@@ -192,6 +229,16 @@ export function buildCurrentAndCompleteProjects() {
     projectName.dataset.priority = getFinishedProjects()[j].priority;
     projectName.dataset.index = j;
     projectName.textContent = getFinishedProjects()[j].name;
+
+    if(getFinishedProjects()[j].priority === 'Low') {
+      projectName.classList.add('low-priority-project');
+    }
+    if(getFinishedProjects()[j].priority === 'Medium') {
+      projectName.classList.add('medium-priority-project');
+    }
+    if(getFinishedProjects()[j].priority === 'High') {
+      projectName.classList.add('high-priority-project');
+    }
   
     document.querySelector('.complete-projects').appendChild(projectName);
   }

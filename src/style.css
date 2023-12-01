@@ -196,14 +196,17 @@ div[class^="project-card-"] {
 div[class^="task-"] {
   display: flex;
   flex-direction: column;
-  border: solid 2px blue;
+  border: solid 2px gray;
+  border-radius: 0.3rem;
   margin: 0.5rem;
   padding: 0.5rem;
+  background-color: var(--light-gray);
 }
 
 div[class^="task-"] > div:first-child {
   display: flex;
   justify-content: space-between;
+  align-items: center;
 }
 
 .buttons-container {
@@ -211,21 +214,158 @@ div[class^="task-"] > div:first-child {
   gap: 1rem;
 }
 
+button[class^="complete-task-button-"] {
+  background-color: var(--confirm-color);
+  border-color: var(--confirm-color);
+  border-style: solid;
+  border-width: 0.1rem;
+  border-radius: 0.2rem;
+  width: 2.4rem;
+  height: 2.4rem;
+}
+
+button[class^="delete-task-button-"] {
+  background-color: var(--negative-color);
+  border-color: var(--negative-color);
+  border-style: solid;
+  border-width: 0.1rem;
+  border-radius: 0.2rem;
+  width: 2.4rem;
+  height: 2.4rem;
+}
+
 div[class^="task-"] > div:last-child {
+  align-items: center;
   display: flex;
+  color: gray;
   gap: 1rem;
 }
 
-.task-complete {
-  background-color: blue;
+.tasks-name {
+  margin: 0;
+  padding: 0;
+}
+
+.tasks-date::before {
+  background-image: url('./images/calendar-alert-outline.png');
+  filter: invert(32%) sepia(51%) saturate(2637%) hue-rotate(227deg) brightness(104%) contrast(104%);
+  background-size: 20px 20px;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  content:"";
+  position: relative;
+  right: 3px;
+  top: 4px;
+}
+
+.tasks-time::before {
+  background-image: url('./images/clock-outline.png');
+  filter: invert(32%) sepia(51%) saturate(2637%) hue-rotate(227deg) brightness(104%) contrast(104%);
+  background-size: 20px 20px;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  content:"";
+  position: relative;
+  right: 3px;
+  top: 4px;
+}
+
+.tasks-priority {
+  font-weight: bold;
+}
+
+.low-priority-task::before {
+  background-image: url('./images/alert-box-outline.png');
+  filter: invert(49%) sepia(9%) saturate(1674%) hue-rotate(92deg) brightness(98%) contrast(83%);
+  background-size: 20px 20px;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  content:"";
+  position: relative;
+  right: 3px;
+  top: 4px;
+}
+
+.medium-priority-task::before {
+  background-image: url('./images/alert-box-outline.png');
+  filter: invert(44%) sepia(94%) saturate(1066%) hue-rotate(345deg) brightness(101%) contrast(101%);
+  background-size: 20px 20px;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  content:"";
+  position: relative;
+  right: 3px;
+  top: 4px;
+}
+
+.high-priority-task::before {
+  background-image: url('./images/alert-box-outline.png');
+  filter: invert(24%) sepia(62%) saturate(2774%) hue-rotate(332deg) brightness(86%) contrast(85%);
+  background-size: 20px 20px;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  content:"";
+  position: relative;
+  right: 3px;
+  top: 4px;
+}
+
+.low-priority-project::before {
+  background-image: url('./images/circle.png');
+  filter: invert(49%) sepia(9%) saturate(1674%) hue-rotate(92deg) brightness(98%) contrast(83%);
+  background-size: 10px 10px;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  content:"";
+  position: relative;
+  right: 5px;
+}
+
+.medium-priority-project::before {
+  background-image: url('./images/circle.png');
+  filter: invert(44%) sepia(94%) saturate(1066%) hue-rotate(345deg) brightness(101%) contrast(101%);
+  background-size: 10px 10px;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  content:"";
+  position: relative;
+  right: 5px;
+}
+
+.high-priority-project::before {
+  background-image: url('./images/circle.png');
+  filter: invert(24%) sepia(62%) saturate(2774%) hue-rotate(332deg) brightness(86%) contrast(85%);
+  background-size: 10px 10px;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  content:"";
+  position: relative;
+  right: 5px;
+}
+
+div[class^="task-"].task-complete {
+  border-color: var(--confirm-color);
 }
 
 .project-complete {
   background-color: green;
 }
 
-.late-task {
-  background-color: yellow;
+div[class^="task-"].late-task {
+  border-color: var(--negative-color);
+}
+
+div[class^="task-"].late-task::after {
+  content: 'TASK EXPIRED';
+  color: red;
 }
 
 .hidden {

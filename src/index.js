@@ -184,7 +184,7 @@ export function taskCompleteButtonAction() {
   const confirmTaskCompleteDialog = document.querySelector('#confirm-complete-task');
   const confirmTaskIncompleteDialog = document.querySelector('#confirm-incomplete-task');
 
-  if(this.parentNode.parentNode.classList.contains('task-complete')) {
+  if(this.parentNode.parentNode.parentNode.classList.contains('task-complete')) {
     confirmTaskIncompleteDialog.showModal();
     document.querySelector('.yes-button-incomplete-task').onclick = () => {
       currentProjects[this.dataset.project].tasks[this.dataset.index].complete = false;
