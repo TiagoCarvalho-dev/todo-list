@@ -35,6 +35,9 @@ export function createProjectCard(projectName, projectPriority, projectIndex, pr
     projectPriorityP.style.color = 'red';
   }
 
+  const projectButtonsContainer = document.createElement('div');
+  projectButtonsContainer.classList.add('buttons-container');
+
   const completeProjectButton = document.createElement('button');
   completeProjectButton.classList.add(`complete-project-button-${projectIndex}`);
   completeProjectButton.dataset.index = projectIndex;
@@ -59,10 +62,12 @@ export function createProjectCard(projectName, projectPriority, projectIndex, pr
 
   deleteProjectButton.appendChild(deleteImageProject);
 
+  projectButtonsContainer.appendChild(completeProjectButton);
+  projectButtonsContainer.appendChild(deleteProjectButton);
+
   projectSubCardDiv.appendChild(projectNameH3);
   projectSubCardDiv.appendChild(projectPriorityP);
-  projectSubCardDiv.appendChild(completeProjectButton);
-  projectSubCardDiv.appendChild(deleteProjectButton);
+  projectSubCardDiv.appendChild(projectButtonsContainer);
 
   const tasksSubCardsDiv = document.createElement('div');
   tasksSubCardsDiv.classList.add(`tasks-sub-cards`);

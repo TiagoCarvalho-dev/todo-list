@@ -89,7 +89,7 @@ export function projectCompleteButtonAction() {
   const confirmCompleteProjectDialog = document.querySelector('#confirm-complete-project');
   const confirmIncompleteProjectDialog = document.querySelector('#confirm-incomplete-project');
 
-  if(this.parentNode.parentNode.classList.contains('project-complete')) {
+  if(this.parentNode.parentNode.parentNode.classList.contains('project-complete')) {
     confirmIncompleteProjectDialog.showModal();
     document.querySelector('.yes-button-incomplete-project').onclick = () => {
       finishedProjects[this.dataset.index].complete = false;
@@ -133,7 +133,7 @@ export function projectDeleteButtonAction() {
   const confirmDeleteProjectDialog = document.querySelector('#confirm-delete-project');
   confirmDeleteProjectDialog.showModal();
   document.querySelector('.yes-button-delete-project').onclick = () => {
-    if(this.parentNode.parentNode.classList.contains('project-complete')) {
+    if(this.parentNode.parentNode.parentNode.classList.contains('project-complete')) {
       finishedProjects.splice(this.dataset.index, 1);
       sortProjects();
       updateLocalStorage();

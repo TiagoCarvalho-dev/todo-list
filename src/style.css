@@ -5,6 +5,7 @@
   --confirm-color: rgb(126, 215, 193);
   --negative-color: rgb(255, 120, 120);
   --light-gray: rgb(238, 238, 238);
+  --dark-gray: rgb(187, 186, 186);
 }
 
 body {
@@ -70,7 +71,7 @@ nav button:hover {
   box-shadow: 1px 2px 6px black;
   padding: 1rem;
   font-size: 1rem;
-  width: 170px;
+  width: 200px;
 }
 
 .left-menu img {
@@ -101,6 +102,30 @@ nav button:hover {
   padding: 0.5rem;
 }
 
+.filters-container button {
+  border-color: var(--primary-color);
+  background-color: white;
+  font-weight: bold;
+  color: var(--primary-color);
+  border-style: solid;
+  border-width: 0.1rem;
+  border-radius: 0.2rem;
+}
+
+.filters-container button:hover {
+  background-color: var(--primary-color);
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.priority-container,
+.date-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
 .current-projects-container,
 .complete-projects-container {
   display: flex;
@@ -112,6 +137,7 @@ nav button:hover {
   grid-column: 2 / 3;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  grid-template-rows: min-content;
   margin: 1rem;
 }
 
@@ -142,6 +168,16 @@ dialog form {
   display: flex;
   flex-direction: column;
   gap: 0.8rem;
+}
+
+.chosen-project-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.chosen-project-container > h4 {
+  margin: 0;
 }
 
 .buttons {
@@ -178,22 +214,34 @@ button[class^="no"] {
 div[class^="project-card-"] {
   display: flex;
   flex-direction: column;
-  border: solid 2px red;
+  background-color: white;
+  border: solid 2px var(--dark-gray);
+  border-radius: 0.3rem;
   margin: 1rem;
 }
 
 .project-sub-card {
   display: flex;
-  border: solid 2px yellow;
+  margin: 0.5rem;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.project-sub-card > h3 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.project-sub-card > p {
+  margin: 0;
 }
 
 .tasks-sub-cards {
   display: flex;
   flex-direction: column;
-  border: solid 2px green;
 }
 
-div[class^="task-"] {
+.tasks-sub-cards > div[class^="task-"] {
   display: flex;
   flex-direction: column;
   border: solid 2px gray;
@@ -203,7 +251,7 @@ div[class^="task-"] {
   background-color: var(--light-gray);
 }
 
-div[class^="task-"] > div:first-child {
+.tasks-sub-cards > div[class^="task-"] > div:first-child {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -214,27 +262,38 @@ div[class^="task-"] > div:first-child {
   gap: 1rem;
 }
 
-button[class^="complete-task-button-"] {
+button[class^="complete-task-button-"],
+button[class^="complete-project-button-"] {
   background-color: var(--confirm-color);
   border-color: var(--confirm-color);
   border-style: solid;
   border-width: 0.1rem;
   border-radius: 0.2rem;
-  width: 2.4rem;
-  height: 2.4rem;
 }
 
-button[class^="delete-task-button-"] {
+button[class^="delete-task-button-"],
+button[class^="delete-project-button-"]{
   background-color: var(--negative-color);
   border-color: var(--negative-color);
   border-style: solid;
   border-width: 0.1rem;
   border-radius: 0.2rem;
+}
+
+button[class^="complete-task-button-"],
+button[class^="delete-task-button-"] {
   width: 2.4rem;
   height: 2.4rem;
 }
 
-div[class^="task-"] > div:last-child {
+button[class^="complete-project-button-"],
+button[class^="delete-project-button-"] {
+  width: 3.2rem;
+  height: 3.2rem;
+}
+
+
+.tasks-sub-cards > div[class^="task-"] > div:last-child {
   align-items: center;
   display: flex;
   color: gray;
@@ -351,12 +410,8 @@ div[class^="task-"] > div:last-child {
   right: 5px;
 }
 
-div[class^="task-"].task-complete {
+div[class^="project-card-"].project-complete {
   border-color: var(--confirm-color);
-}
-
-.project-complete {
-  background-color: green;
 }
 
 div[class^="task-"].late-task {
@@ -366,6 +421,30 @@ div[class^="task-"].late-task {
 div[class^="task-"].late-task::after {
   content: 'TASK EXPIRED';
   color: red;
+}
+
+div[class^="task-"].task-complete {
+  border-color: var(--confirm-color);
+}
+
+div[class^="task-"].task-complete::after {
+  content: '';
+}
+
+.new-task-button {
+  border: solid 2px var(--primary-color);
+  color: var(--primary-color);
+  border-radius: 0.3rem;
+  background-color: white;
+  margin: 0.5rem;
+}
+
+.new-task-button:hover {
+  border: solid 2px var(--primary-color);
+  color: white;
+  border-radius: 0.3rem;
+  background-color: var(--primary-color);
+  margin: 0.5rem;
 }
 
 .hidden {

@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>To do list</title>
 </head>
 <body>
   <nav>
@@ -62,8 +59,7 @@
   </div>
   <div class="main-section"></div>
   <footer>
-    <p>Copyright ©</p>
-    <script>document.write(new Date().getFullYear())</script>
+    <p>Copyright © 2023</p>
     <p>TiagoCarvalho-dev</p>
     <a href="https://github.com/TiagoCarvalho-dev"><img src="../src/images/github.svg" alt="Github Logo" width="30px" height="auto"></a>
   </footer>
@@ -72,7 +68,7 @@
     <form method="dialog" class="new-project-form">
       <div class="project-name-container">
         <label for="project-name">Project Name:</label>
-        <input type="text" name="project-name" id="project-name">
+        <input type="text" name="project-name" id="project-name" maxlength="16">
       </div>
       <div class="project-priority-container">
         <legend>Priority</legend>
@@ -95,7 +91,7 @@
   <dialog id="new-task-dialog">
     <form method="dialog" class="new-task-form">
       <div class="chosen-project-container">
-        <p>Project: </p>
+        <h4>Project: </h4>
         <p class="chosen-project"></p>
       </div>
       <div class="task-name-container">
